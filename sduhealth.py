@@ -29,18 +29,25 @@ def get_lt_And_execution(result):
 
 
 def login(username, password):
-    login_url = "https://pass.sdu.edu.cn/cas/login?service=https://service.sdu.edu.cn/tp_up/"
+    login_url = "https://pass.sdu.edu.cn/cas/login"
 
     login_Header = {
+        'Upgrade-Insecure-Requests': '1',
+        'Origin': "https://pass.sdu.edu.cn",
         'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
-        "content-type": "application/json"
+        'content-type': "application/json",
+        'Referer': "https://pass.sdu.edu.cn/cas/login",
+        'Sec-Fetch-Site': "same-origin",
+        'Sec-Fetch-Mode': "navigate",
+        'Sec-Fetch-User': "?1",
+        'Sec-Fetch-Dest': "document"
     }
     login_Cookie = {
         'JSESSIONID': 'CDDADFE350C42BDEC44B59F94D326EE6'
     }
 
-    ul = len(user)
-    pl = len(password)
+    ul = str(len(user))
+    pl = str(len(password))
 
     session = requests.session()
     r = session.get(login_url)
@@ -51,18 +58,28 @@ def login(username, password):
 
     rsa = generate_their_RSA(username=username, password=password, lt=lt)
 
-    body = rsa + '&' + 'ul=' + str(ul) + '&' + 'pl=' + str(pl) + '&' + 'lt=' + \
-        lt + '&' + 'execution=' + execution + '&_eventId = submit'
-
     login_Body = {
-        'rsa': body
+        'rsa': rsa,
+        'ul': ul,
+        'pl': pl,
+        'lt': lt,
+        'execution': execution,
+        '_eventId': 'submit'
     }
 
     try:
-        r = session.post(login_url, headers=login_Header,
-                         cookies=login_Cookie, data=login_Body)
-        # r_cookie = r.cookies
-        print(r)
+        result = session.post(login_url, headers=login_Header,
+                              cookies=login_Cookie, data=login_Body)
+
+        result = session.get("http://service.sdu.edu.cn/tp_up/view?m=up")
+
+        result = session.get(
+            "https://service.sdu.edu.cn/tp_up/view?m=up#act=portal/viewhome")
+
+        print(result)
+        print(result.headers)
+        print(result.text)
+
         print('OK')
     except:
         print('?')
