@@ -1,9 +1,20 @@
+import pytz
+import datetime
 import requests
 import execjs
 import secrets
 import demjson as json
 
 from bs4 import BeautifulSoup
+
+TIME_ZONE = 'Asia/Shanghai'
+
+
+def get_current_date(timezone):
+    tz = pytz.timezone(timezone)
+    current_time = datetime.datetime.now(tz).strftime("%Y-%m-%d 10:00:00")
+    print(current_time)
+    return(current_time)
 
 
 def js_from_file(filename):
