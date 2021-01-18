@@ -3,6 +3,7 @@ import execjs
 import secrets
 
 from bs4 import BeautifulSoup
+from requests.sessions import session
 
 
 def js_from_file(filename):
@@ -32,14 +33,26 @@ class SduHealth(object):
         super().__init__()
         self.username = username
         self.password = password
+        self.privilegedID = '41d9ad4a-f681-4872-a400-20a3b606d399'
+        self.serviceID = ''
         self.login_url = "https://pass.sdu.edu.cn/cas/login"
         self.service_url = "https://service.sdu.edu.cn/tp_up"
         self.health_url = "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=87dc6da9-9ad8-4458-9654-90823be0d5f6&act=fp/serveapply"
+        self.privilegedID_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply"
 
         self.session = requests.session()
         self.login_header = {
             'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
             'content-type': "application/x-www-form-urlencoded",
+        }
+        self.privilegedID_header = {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
+            'content-type': "application/json;charset=UTF-8",
+            'X-Requested-With': "XMLHttpRequest",
+            'Content-Length': '64',
+            'Accept': "application/json, text/javascript, */*; q = 0.01",
+            'Origin': "https://scenter.sdu.edu.cn",
+            'Referer': "https://scenter.sdu.edu.cn/tp_fp/view?m=fp"
         }
         self.login_cookie = {
             'JSESSIONID': secrets.token_hex(16).upper()
@@ -78,13 +91,21 @@ class SduHealth(object):
             print(result)
         except:
             print('?')
-            
+
+    def get_privilegedID(self):
+        body = {
+            "serveID": self.serviceID,
+            "from": "hall"
+        }
+        result = self.session.post(self.privilegedID_url, headers=self.privilegedID_header,
+                                   data=body)
+        print(result)
+
     def health_checkin(self):
         pass
-    
+
     def health_logout(self):
         pass
-    
 
 
 if __name__ == "__main__":
@@ -92,3 +113,4 @@ if __name__ == "__main__":
     password = ''
     sdu = SduHealth(username=user, password=password)
     sdu.health_login()
+    sdu.get_privilegedID()
