@@ -19,14 +19,14 @@ def get_current_date(timezone):
 
 def js_from_file(filename):
     # Read Javascript file
-    # so you need nodejs installed on your computer
+    # so you need NodeJs installed on your computer
     with open(filename, 'r', encoding='UTF-8') as f:
         result = f.read()
     return result
 
 
 def generate_their_RSA(username, password, lt):
-    # return thay called 'RSA' string, note here just return 'RSA' string!
+    # return they called 'RSA' string, note here just return 'RSA' string!
     context = execjs.compile(js_from_file('./js/des.js'))
     rsa = context.call("strEnc", username + password + lt, "1", "2", "3")
     return rsa
