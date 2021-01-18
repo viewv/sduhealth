@@ -214,17 +214,26 @@ class SduHealth(object):
     def health_checkin(self):
         print("gethealth ", end='')
         self.getHealthUrl()
+
         print("checkService ", end='')
         self.check_service()
+
         print("serveInfo ", end='')
         self.serve_info()
+
         print("getServeApply ", end='')
         self.get_serve_apply()
+
         print("getContinueService ", end='')
         self.get_continue_service()
+
         print("getSignData ", end='')
         self.get_sign_data()
+
         print(self.frame_json)
+
+        print("changeDate ", end='')
+        self.change_date()
 
     def health_logout(self):
         try:
