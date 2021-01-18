@@ -94,6 +94,7 @@ class SduHealth(object):
         self.login_cookie = {
             'JSESSIONID': secrets.token_hex(16).upper()
         }
+        self.frame_json = {}
 
     def health_login(self):
         try:
@@ -199,24 +200,31 @@ class SduHealth(object):
                 f.write(get_sign_data_result.text)
                 frame = get_frame(get_sign_data_result).string
                 frame_json = json.decode(frame)
-                print(frame_json)
-
+                self.frame_json = frame_json
         except:
             print("get_sign_data error")
 
+    def change_date(self):
+        frame_json = self.frame_json
+        current_date = get_current_date(TIME_ZONE)
+        print(frame_json["body"]["dataStores"]
+              ["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"])
+        self.frame_json = frame_json
+
     def health_checkin(self):
-        print("gethealth ", end='')
-        self.getHealthUrl()
-        print("checkService ", end='')
-        self.check_service()
-        print("serveInfo ", end='')
-        self.serve_info()
-        print("getServeApply ", end='')
-        self.get_serve_apply()
-        print("getContinueService ", end='')
-        self.get_continue_service()
-        print("getSignData ", end='')
-        self.get_sign_data()
+        print("gethealth ", self.getHealthUrl())
+
+        print("checkService ", self.check_service())
+
+        print("serveInfo ", self.serve_info())
+
+        print("getServeApply ", self.get_serve_apply())
+
+        print("getContinueService ", self.get_continue_service())
+
+        print("getSignData ", self.get_sign_data())
+
+        print("change date", self.change_date())
 
     def health_logout(self):
         try:
