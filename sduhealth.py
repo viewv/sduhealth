@@ -212,19 +212,19 @@ class SduHealth(object):
         self.frame_json = frame_json
 
     def health_checkin(self):
-        print("gethealth ", self.getHealthUrl())
-
-        print("checkService ", self.check_service())
-
-        print("serveInfo ", self.serve_info())
-
-        print("getServeApply ", self.get_serve_apply())
-
-        print("getContinueService ", self.get_continue_service())
-
-        print("getSignData ", self.get_sign_data())
-
-        print("change date", self.change_date())
+        print("gethealth ", end='')
+        self.getHealthUrl()
+        print("checkService ", end='')
+        self.check_service()
+        print("serveInfo ", end='')
+        self.serve_info()
+        print("getServeApply ", end='')
+        self.get_serve_apply()
+        print("getContinueService ", end='')
+        self.get_continue_service()
+        print("getSignData ", end='')
+        self.get_sign_data()
+        print(self.frame_json)
 
     def health_logout(self):
         try:
