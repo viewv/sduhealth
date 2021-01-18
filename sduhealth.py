@@ -247,6 +247,7 @@ class SduHealth(object):
             print("logout 4", result)
         except:
             print("logout ?")
+        self.session.close()
 
 
 if __name__ == "__main__":
