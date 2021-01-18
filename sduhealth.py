@@ -78,6 +78,12 @@ class SduHealth(object):
             print(result)
         except:
             print('?')
+            
+    def health_checkin(self):
+        pass
+    
+    def health_logout(self):
+        pass
     
 
 
