@@ -1,6 +1,7 @@
 import requests
 import execjs
 import secrets
+import demjson as json
 
 from bs4 import BeautifulSoup
 
@@ -15,7 +16,7 @@ def js_from_file(filename):
 
 def generate_their_RSA(username, password, lt):
     # return thay called 'RSA' string, note here just return 'RSA' string!
-    context = execjs.compile(js_from_file('./des.js'))
+    context = execjs.compile(js_from_file('./js/des.js'))
     rsa = context.call("strEnc", username + password + lt, "1", "2", "3")
     return rsa
 
@@ -185,8 +186,10 @@ class SduHealth(object):
             print(get_sign_data_result)
             with open('sign_data.html', 'w') as f:
                 f.write(get_sign_data_result.text)
-                frame = get_frame(get_sign_data_result)
-                print(frame.string)
+                frame = get_frame(get_sign_data_result).string
+                frame_json = json.decode(frame)
+                print(frame_json)
+
         except:
             print("get_sign_data error")
 
@@ -219,8 +222,10 @@ class SduHealth(object):
 
 
 if __name__ == "__main__":
-    user = ''
-    password = ''
+    with open("./userinfo.txt") as f:
+        info = f.readlines()
+        user = info[0].strip("\n")
+        password = info[1].strip("\n")
     sdu = SduHealth(username=user, password=password)
     sdu.health_login()
     # ------------------
