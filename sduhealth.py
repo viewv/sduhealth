@@ -3,7 +3,6 @@ import execjs
 import secrets
 
 from bs4 import BeautifulSoup
-from requests.sessions import session
 
 
 def js_from_file(filename):
@@ -33,11 +32,11 @@ class SduHealth(object):
         super().__init__()
         self.username = username
         self.password = password
-        self.privilegedID = '41d9ad4a-f681-4872-a400-20a3b606d399'
-        self.serviceID = ''
+        self.privilegedID = ''
+        self.serviceID = '41d9ad4a-f681-4872-a400-20a3b606d399'
         self.login_url = "https://pass.sdu.edu.cn/cas/login"
         self.service_url = "https://service.sdu.edu.cn/tp_up"
-        self.health_url = "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=87dc6da9-9ad8-4458-9654-90823be0d5f6&act=fp/serveapply"
+        self.health_url = "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=41d9ad4a-f681-4872-a400-20a3b606d399&act=fp/serveapply"
         self.privilegedID_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply"
 
         self.session = requests.session()
@@ -47,12 +46,10 @@ class SduHealth(object):
         }
         self.privilegedID_header = {
             'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
-            'content-type': "application/json;charset=UTF-8",
-            'X-Requested-With': "XMLHttpRequest",
-            'Content-Length': '64',
-            'Accept': "application/json, text/javascript, */*; q = 0.01",
-            'Origin': "https://scenter.sdu.edu.cn",
-            'Referer': "https://scenter.sdu.edu.cn/tp_fp/view?m=fp"
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Origin': 'https://scenter.sdu.edu.cn',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Referer': 'https://scenter.sdu.edu.cn/tp_fp/view?m=fp'
         }
         self.login_cookie = {
             'JSESSIONID': secrets.token_hex(16).upper()
@@ -83,23 +80,64 @@ class SduHealth(object):
             result = self.session.post(self.login_url, headers=self.login_header,
                                        cookies=self.login_cookie, data=login_body)
 
-            # result = session.get("http://service.sdu.edu.cn/tp_up/view?m=up")
-
             result = self.session.get(
                 "https://service.sdu.edu.cn/tp_up/view?m=up#act=portal/viewhome")
 
-            print(result)
+            print("login", result)
         except:
             print('?')
 
     def get_privilegedID(self):
-        body = {
-            "serveID": self.serviceID,
+        serve_body = {
+            "serveID": "41d9ad4a-f681-4872-a400-20a3b606d399"
+        }
+
+        serve_body_hall = {
+            "serveID": "41d9ad4a-f681-4872-a400-20a3b606d399",
             "from": "hall"
         }
-        result = self.session.post(self.privilegedID_url, headers=self.privilegedID_header,
-                                   data=body)
-        print(result)
+
+        result = self.session.get(
+            "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=41d9ad4a-f681-4872-a400-20a3b606d399&act=fp/serveapply")
+
+        mapping_body = {
+            "mapping": "getAccessCount"
+        }
+
+        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/sys/monitor/sql/get",
+                                   headers=self.privilegedID_header,
+                                   json=mapping_body)
+        print("mapping post", result)
+
+        result = self.session.get("https://scenter.sdu.edu.cn/tp_fp")
+
+        result = self.session.get(
+            "https://scenter.sdu.edu.cn/tp_fp/sys/theme/getThemes")
+
+        result = self.session.get(
+            "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply?item_id=undefined")
+
+        result = self.session.get(
+            "https://scenter.sdu.edu.cn/tp_fp/view?m=fp")
+
+        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/checkService",
+                                   headers=self.privilegedID_header,
+                                   json=serve_body)
+        print("CheckService post", result)
+
+        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/serveInfo",
+                                   headers=self.privilegedID_header,
+                                   json=serve_body)
+
+        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply",
+                                   headers=self.privilegedID_header,
+                                   json=serve_body_hall)
+        print("getServeApply post", result)
+
+        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getContinueService",
+                                   headers=self.privilegedID_header,
+                                   json=serve_body)
+        print("getContinueService post", result)
 
     def health_checkin(self):
         pass
