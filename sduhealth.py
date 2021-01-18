@@ -34,10 +34,17 @@ class SduHealth(object):
         self.password = password
         self.privilegedID = ''
         self.serviceID = '41d9ad4a-f681-4872-a400-20a3b606d399'
+
         self.login_url = "https://pass.sdu.edu.cn/cas/login"
         self.service_url = "https://service.sdu.edu.cn/tp_up"
         self.health_url = "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=41d9ad4a-f681-4872-a400-20a3b606d399&act=fp/serveapply"
+
         self.privilegedID_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply"
+
+        self.logout_1_url = "https://service.sdu.edu.cn/tp_up/logout"
+        self.logout_2_url = "https://pass.sdu.edu.cn/cas/logout?service=https://service.sdu.edu.cn/tp_up/"
+        self.logout_3_url = "https://pass.sdu.edu.cn/portal/logout.jsp?service=https://service.sdu.edu.cn/tp_up/"
+        self.logout_4_url = "https://service.sdu.edu.cn/tp_up/"
 
         self.session = requests.session()
         self.login_header = {
@@ -87,7 +94,7 @@ class SduHealth(object):
         except:
             print('?')
 
-    def get_privilegedID(self):
+    def get_all_id(self):
         serve_body = {
             "serveID": "41d9ad4a-f681-4872-a400-20a3b606d399"
         }
@@ -143,7 +150,17 @@ class SduHealth(object):
         pass
 
     def health_logout(self):
-        pass
+        try:
+            result = self.session.get(self.logout_1_url)
+            print("logout 1", result)
+            result = self.session.get(self.logout_2_url)
+            print("logout 2", result)
+            result = self.session.get(self.logout_3_url)
+            print("logout 3", result)
+            result = self.session.get(self.logout_4_url)
+            print("logout 4", result)
+        except:
+            print("logout ?")
 
 
 if __name__ == "__main__":
@@ -151,4 +168,5 @@ if __name__ == "__main__":
     password = ''
     sdu = SduHealth(username=user, password=password)
     sdu.health_login()
-    sdu.get_privilegedID()
+    sdu.get_all_id()
+    sdu.health_logout()
