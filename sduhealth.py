@@ -27,6 +27,12 @@ def get_lt_And_execution(result):
     return {'lt': lt, 'execution': execution}
 
 
+def get_page_title(result):
+    soup = BeautifulSoup(result.content, "html.parser")
+    title = soup.find('title').string
+    return title
+
+
 class SduHealth(object):
     def __init__(self, username, password) -> None:
         super().__init__()
@@ -90,6 +96,12 @@ class SduHealth(object):
             result = self.session.get(
                 "https://service.sdu.edu.cn/tp_up/view?m=up#act=portal/viewhome")
 
+            title = get_page_title(result=result)
+            if title == "山东大学信息化公共服务平台":
+                print(title)
+                print("login successful")
+            else:
+                print("login failed")
             print("login", result)
         except:
             print('?')
