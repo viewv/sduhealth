@@ -14,7 +14,7 @@ def js_from_file(filename):
 
 
 def generate_their_RSA(username, password, lt):
-    # return thay called 'RSA' string, note here just return RSA string!
+    # return thay called 'RSA' string, note here just return 'RSA' string!
     context = execjs.compile(js_from_file('./des.js'))
     rsa = context.call("strEnc", username + password + lt, "1", "2", "3")
     return rsa
@@ -33,19 +33,34 @@ def get_page_title(result):
     return title
 
 
+def get_frame(result):
+    soup = BeautifulSoup(result.content, "html.parser")
+    frame = soup.find(id="dcstr")
+    return frame
+
+
 class SduHealth(object):
     def __init__(self, username, password) -> None:
         super().__init__()
         self.username = username
         self.password = password
-        self.privilegedID = ''
+
+        self.home_title = "山东大学信息化公共服务平台"
         self.serviceID = '41d9ad4a-f681-4872-a400-20a3b606d399'
+        self.privilege_id = ''
+        self.process_id = ''
+        self.SYS_FK = ''
+        self.form_id = ''
 
         self.login_url = "https://pass.sdu.edu.cn/cas/login"
         self.service_url = "https://service.sdu.edu.cn/tp_up"
+        self.home_url = "https://service.sdu.edu.cn/tp_up/view?m=up#act=portal/viewhome"
         self.health_url = "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=41d9ad4a-f681-4872-a400-20a3b606d399&act=fp/serveapply"
 
-        self.privilegedID_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply"
+        self.check_service_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/checkService"
+        self.serve_info_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/serveInfo"
+        self.get_serve_apply_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply"
+        self.get_continue_service_url = "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getContinueService"
 
         self.logout_1_url = "https://service.sdu.edu.cn/tp_up/logout"
         self.logout_2_url = "https://pass.sdu.edu.cn/cas/logout?service=https://service.sdu.edu.cn/tp_up/"
@@ -57,7 +72,7 @@ class SduHealth(object):
             'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
             'content-type': "application/x-www-form-urlencoded",
         }
-        self.privilegedID_header = {
+        self.service_header = {
             'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
             'Content-Type': 'application/json;charset=UTF-8',
             'Origin': 'https://scenter.sdu.edu.cn',
@@ -93,73 +108,101 @@ class SduHealth(object):
             result = self.session.post(self.login_url, headers=self.login_header,
                                        cookies=self.login_cookie, data=login_body)
 
-            result = self.session.get(
-                "https://service.sdu.edu.cn/tp_up/view?m=up#act=portal/viewhome")
+            result = self.session.get(self.home_url)
 
             title = get_page_title(result=result)
-            if title == "山东大学信息化公共服务平台":
+            if title == self.home_title:
                 print(title)
                 print("login successful")
             else:
                 print("login failed")
             print("login", result)
         except:
-            print('?')
+            print('login error')
 
-    def get_all_id(self):
-        serve_body = {
-            "serveID": "41d9ad4a-f681-4872-a400-20a3b606d399"
-        }
+    def getHealthUrl(self):
+        getHealth = self.session.get(self.health_url)
+        print(getHealth)
 
-        serve_body_hall = {
-            "serveID": "41d9ad4a-f681-4872-a400-20a3b606d399",
+    def check_service(self):
+        try:
+            check_body = {
+                "serveID": self.serviceID
+            }
+            check_result = self.session.post(
+                self.check_service_url, json=check_body, headers=self.service_header)
+            print(check_result)
+        except:
+            print("check_service error")
+
+    def serve_info(self):
+        try:
+            serve_body = {
+                "serviceID": self.serviceID
+            }
+            serve_result = self.session.post(
+                self.serve_info_url, json=serve_body, headers=self.service_header)
+            print(serve_result)
+        except:
+            pass
+
+    def get_serve_apply(self):
+        get_serve_apply_body = {
+            "serveID": self.serviceID,
             "from": "hall"
         }
+        try:
+            get_serve_apply_result = self.session.post(
+                self.get_serve_apply_url, json=get_serve_apply_body, headers=self.service_header)
+            print(get_serve_apply_result)
+            get_serve_apply_json = get_serve_apply_result.json()
+            self.form_id = get_serve_apply_json['formID']
+            self.process_id = get_serve_apply_json['procID']
+            self.privilege_id = get_serve_apply_json['privilegeId']
+        except:
+            print("get_serve_apply error")
 
-        result = self.session.get(
-            "https://scenter.sdu.edu.cn/tp_fp/view?m=fp#from=hall&serveID=41d9ad4a-f681-4872-a400-20a3b606d399&act=fp/serveapply")
-
-        mapping_body = {
-            "mapping": "getAccessCount"
+    def get_continue_service(self):
+        get_continue_service_body = {
+            "serviceID": self.serviceID,
         }
+        try:
+            get_continue_service_result = self.session.post(
+                self.get_continue_service_url, json=get_continue_service_body, headers=self.service_header)
+            print(get_continue_service_result)
+            get_continue_service_json = get_continue_service_result.json()
+            self.SYS_FK = get_continue_service_json[0]['proc_inst_id']
+        except:
+            print("get_continue_service error")
 
-        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/sys/monitor/sql/get",
-                                   headers=self.privilegedID_header,
-                                   json=mapping_body)
-        print("mapping post", result)
+    def get_sign_data(self):
+        get_sign_data_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=select&formid=" + self.form_id + "&service_id=" + \
+            self.serviceID + "&process=" + self.process_id + "&seqId=&SYS_FK=" + \
+            self.SYS_FK + "&privilegeId=" + self.privilege_id
 
-        result = self.session.get("https://scenter.sdu.edu.cn/tp_fp")
-
-        result = self.session.get(
-            "https://scenter.sdu.edu.cn/tp_fp/sys/theme/getThemes")
-
-        result = self.session.get(
-            "https://scenter.sdu.edu.cn/tp_fp/fp/serveapply?item_id=undefined")
-
-        result = self.session.get(
-            "https://scenter.sdu.edu.cn/tp_fp/view?m=fp")
-
-        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/checkService",
-                                   headers=self.privilegedID_header,
-                                   json=serve_body)
-        print("CheckService post", result)
-
-        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/serveInfo",
-                                   headers=self.privilegedID_header,
-                                   json=serve_body)
-
-        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getServeApply",
-                                   headers=self.privilegedID_header,
-                                   json=serve_body_hall)
-        print("getServeApply post", result)
-
-        result = self.session.post("https://scenter.sdu.edu.cn/tp_fp/fp/serveapply/getContinueService",
-                                   headers=self.privilegedID_header,
-                                   json=serve_body)
-        print("getContinueService post", result)
+        try:
+            get_sign_data_result = self.session.get(get_sign_data_url)
+            print(get_sign_data_result)
+            with open('sign_data.html', 'w') as f:
+                f.write(get_sign_data_result.text)
+                frame = get_frame(get_sign_data_result)
+                print(frame.string)
+        except:
+            print("get_sign_data error")
 
     def health_checkin(self):
-        pass
+        print("gethealth ", end='')
+        self.getHealthUrl()
+        print("checkService ", end='')
+        self.check_service()
+        print("serveInfo ", end='')
+        self.serve_info()
+        print("getServeApply ", end='')
+        self.get_serve_apply()
+        print("getContinueService ", end='')
+        self.get_continue_service()
+        print("getSignData ", end='')
+        self.get_sign_data()
 
     def health_logout(self):
         try:
@@ -180,5 +223,7 @@ if __name__ == "__main__":
     password = ''
     sdu = SduHealth(username=user, password=password)
     sdu.health_login()
-    sdu.get_all_id()
+    # ------------------
+    sdu.health_checkin()
+    # ------------------
     sdu.health_logout()
