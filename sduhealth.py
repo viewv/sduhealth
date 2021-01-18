@@ -1,6 +1,6 @@
 import requests
-import os
 import execjs
+import secrets
 
 from bs4 import BeautifulSoup
 
@@ -14,7 +14,7 @@ def js_from_file(filename):
 
 
 def generate_their_RSA(username, password, lt):
-    # return thay call 'RSA' string, note their just return RSA string!
+    # return thay called 'RSA' string, note here just return RSA string!
     context = execjs.compile(js_from_file('./des.js'))
     rsa = context.call("strEnc", username + password + lt, "1", "2", "3")
     return rsa
@@ -34,11 +34,12 @@ def login(username, password):
         'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
         'content-type': "application/x-www-form-urlencoded",
     }
+    
     login_Cookie = {
-        'JSESSIONID': 'FDDADFE350C42BDEC44B59F94D326EE6'
+        'JSESSIONID': secrets.token_hex(16).upper()
     }
 
-    ul = str(len(user))
+    ul = str(len(username))
     pl = str(len(password))
 
     try:
@@ -78,4 +79,4 @@ def login(username, password):
 if __name__ == "__main__":
     user = ''
     password = ''
-    login(username=user, password=password)
+    login(username=user,password=password)
