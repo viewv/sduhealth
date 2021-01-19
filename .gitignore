@@ -18,3 +18,8 @@ example.json
 
 # Local History for Visual Studio Code
 .history/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class

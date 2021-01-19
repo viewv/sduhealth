@@ -190,7 +190,6 @@ class SduHealth(object):
 
             frame = get_frame(get_sign_data_result).string
             frame_json = json.decode(frame)
-            print(frame_json)
             source_json = frame_json
             frame_json = Model.generate_post_data(source_data=source_json)
             self.frame_json = frame_json
