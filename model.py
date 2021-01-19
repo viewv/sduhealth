@@ -26,8 +26,6 @@ def get_current_stamp():
 
 
 def generate_post_data(source_data):
-    print("----------")
-    print(source_data)
     model_data = json.decode_file("./model.json")
     current_date = get_current_date(TIME_ZONE)
     current_date_time = current_date + ' 07:00:00'
@@ -100,7 +98,7 @@ def generate_post_data(source_data):
     model_data["body"]["dataStores"]["variable"] = source_data["body"]["dataStores"]["variable"]
     model_data["body"]["parameters"] = source_data["body"]["parameters"]
 
-    json.encode_to_file("./example.json", overwrite=True)
+    json.encode_to_file("./example.json", model_data, overwrite=True)
 
     return model_data
 
