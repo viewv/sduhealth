@@ -20,13 +20,17 @@
 pip install -r requirements.txt
 ```
 
-安装 python 所需依赖，之后在本地新建一个 `userinfo.txt` 文件，第一行为学号，第二行为密码，之后直接运行 `sduhealth.py` 即可开始打卡。
+安装 python 所需依赖之后，需要把configexample.yml文件改名为config.yml，然后根据文件里面的内容指示填入账号和密码。
+
+然后就可以运行程序进行打卡了
 
 注意需要你使用本程序打卡前一天手动打过卡，且当天没有打过卡。
 
 ### Github Action 运行
 
-待完成
+首先复制configexample.yml文件里面的所有内容，然后在本地进行编辑，根据文件的指示填入账号和密码，之后可以去[yaml检测](https://www.bejson.com/validators/yaml_editor/)检测一下文件的正确性。
+
+在github项目中Settings里面选择Secrets，然后点击那个New repository secret，在新建的secrets里面Name为CONFIG，Value就是把之前的yaml文件全部复制进去即可。
 
 ## 进度
 
