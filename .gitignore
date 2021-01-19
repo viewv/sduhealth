@@ -8,6 +8,7 @@ etjson.json
 userinfo.txt
 .DS_Store
 example.json
+config.yml
 
 .vscode/*
 !.vscode/settings.json
