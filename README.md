@@ -32,6 +32,10 @@ pip install -r requirements.txt
 
 在github项目中Settings里面选择Secrets，然后点击那个New repository secret，在新建的secrets里面Name为CONFIG，Value就是把之前的yaml文件全部复制进去即可。
 
+## 程序分析
+
+想知道这个程序如何工作的，出现了 bug 想修改代码？欢迎阅读 [山东大学健康打卡系统分析](https://github.com/viewv/sduhealth/blob/main/analysis.md) ！
+
 ## 进度
 
 ✅ 登陆  
