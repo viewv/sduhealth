@@ -1,5 +1,3 @@
-import pytz
-import datetime
 import requests
 import execjs
 import secrets
@@ -8,15 +6,6 @@ import demjson as json
 import Model
 
 from bs4 import BeautifulSoup
-
-TIME_ZONE = 'Asia/Shanghai'
-
-
-def get_current_date(timezone):
-    tz = pytz.timezone(timezone)
-    current_time = datetime.datetime.now(tz).strftime("%Y-%m-%d 10:00:00")
-    print(current_time)
-    return(current_time)
 
 
 def js_from_file(filename):
@@ -202,14 +191,11 @@ class SduHealth(object):
                 f.write(get_sign_data_result.text)
                 frame = get_frame(get_sign_data_result).string
                 frame_json = json.decode(frame)
+                frame_json = Model.generate_post_data(frame_json)
+                print(frame_json)
                 self.frame_json = frame_json
         except:
             print("get_sign_data error")
-
-    def change_date(self):
-        frame_json = self.frame_json
-        current_date = get_current_date(TIME_ZONE)
-        self.frame_json = frame_json
 
     def health_checkin(self):
         print("gethealth ", end='')
@@ -229,11 +215,6 @@ class SduHealth(object):
 
         print("getSignData ", end='')
         self.get_sign_data()
-
-        print(self.frame_json)
-
-        print("changeDate ", end='')
-        self.change_date()
 
     def health_logout(self):
         try:
