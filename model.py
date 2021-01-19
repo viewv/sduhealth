@@ -14,8 +14,15 @@ def test(data):
 def get_current_date(timezone):
     tz = pytz.timezone(timezone)
     current_time = datetime.datetime.now(tz).strftime("%Y-%m-%d")
-    print("!", current_time)
-    return(current_time)
+    return current_time
+
+
+def get_yesterday_date(timezone):
+    tz = pytz.timezone(timezone)
+    yesterday_time = datetime.datetime.now(
+        tz) - datetime.timedelta(days=1)
+    yesterday_time = yesterday_time.strftime("%Y-%m-%d")
+    return yesterday_time
 
 
 def get_current_stamp():
@@ -27,9 +34,14 @@ def get_current_stamp():
 
 def generate_post_data(source_data):
     model_data = json.decode_file("./model.json")
+
     current_date = get_current_date(TIME_ZONE)
-    current_date_time = current_date + ' 07:00:00'
-    current_timestamp = get_current_stamp()
+    # current_date_time = current_date + ' 07:00:00'
+
+    yesterday_date = get_yesterday_date(TIME_ZONE)
+    yesterday_date_time = yesterday_date + ' 07:00:00'
+
+    # current_timestamp = get_current_stamp()
 
     source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]
 
@@ -55,7 +67,7 @@ def generate_post_data(source_data):
     quxian_text = source_record["quxian_TEXT"]  # tone text
     quxian = source_record["quxian"]            # tone
     dqjzdz = source_record["DQJZDZ"]            # location
-    clsj = current_date_time                    # temp. time
+    clsj = yesterday_date_time                  # temp. time
 
     # SYS_USER = source_vars[0]["value"]          # student name
     # SYS_UNIT = source_vars[1]["value"]          # student unit
@@ -92,8 +104,8 @@ def generate_post_data(source_data):
     model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["CLSJ"] = clsj
 
     model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"] = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
+    # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
+    # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
 
     model_data["body"]["dataStores"]["variable"] = source_data["body"]["dataStores"]["variable"]
     model_data["body"]["parameters"] = source_data["body"]["parameters"]
@@ -101,7 +113,3 @@ def generate_post_data(source_data):
     json.encode_to_file("./example.json", model_data, overwrite=True)
 
     return model_data
-
-
-if __name__ == "__main__":
-    generate_post_data(None)

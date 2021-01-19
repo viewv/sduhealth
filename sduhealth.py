@@ -82,6 +82,11 @@ class SduHealth(object):
             'X-Requested-With': 'XMLHttpRequest',
             'Referer': 'https://scenter.sdu.edu.cn/tp_fp/view?m=fp'
         }
+        self.checkin_header = {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36',
+            'Content-Type': 'text/plain;charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
         self.login_cookie = {
             'JSESSIONID': secrets.token_hex(16).upper()
         }
@@ -214,6 +219,18 @@ class SduHealth(object):
 
         print("getSignData ", end='')
         self.get_sign_data()
+
+        print("Strat Checkin!")
+        checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
+            self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
+
+        checkin_body = json.encode(self.frame_json)
+        try:
+            result = self.session.post(checkin_url, data=checkin_body,
+                                       headers=self.checkin_header)
+            print("Checkin", result)
+        except:
+            print("Check error")
 
     def health_logout(self):
         try:
