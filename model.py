@@ -14,7 +14,7 @@ def test(data):
 def get_current_date(timezone):
     tz = pytz.timezone(timezone)
     current_time = datetime.datetime.now(tz).strftime("%Y-%m-%d")
-    print(current_time)
+    print("!", current_time)
     return(current_time)
 
 
@@ -26,6 +26,8 @@ def get_current_stamp():
 
 
 def generate_post_data(source_data):
+    print("----------")
+    print(source_data)
     model_data = json.decode_file("./model.json")
     current_date = get_current_date(TIME_ZONE)
     current_date_time = current_date + ' 07:00:00'
@@ -56,7 +58,6 @@ def generate_post_data(source_data):
     quxian = source_record["quxian"]            # tone
     dqjzdz = source_record["DQJZDZ"]            # location
     clsj = current_date_time                    # temp. time
-
 
     # SYS_USER = source_vars[0]["value"]          # student name
     # SYS_UNIT = source_vars[1]["value"]          # student unit
