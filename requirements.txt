@@ -1,13 +1,9 @@
 astroid==2.4.2
 autopep8==1.5.4
-baidu-aip==2.2.17.0
 beautifulsoup4==4.9.1
 certifi==2020.12.5
 cffi==1.14.0
 chardet==3.0.4
-conda==4.9.2
-conda-package-handling==1.7.0
-cryptography==2.9.2
 demjson==2.2.4
 idna==2.9
 isort==4.3.21
@@ -26,13 +22,8 @@ pytz==2020.5
 PyYAML==5.3.1
 requests==2.23.0
 ruamel-yaml==0.15.87
-selenium==3.141.0
-simplejson==3.17.2
-six==1.14.0
 soupsieve==2.0.1
 toml==0.10.1
-tqdm==4.46.0
 typed-ast==1.4.1
 urllib3==1.25.8
 wrapt==1.11.2
-you-get==0.4.1456

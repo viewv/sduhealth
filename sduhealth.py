@@ -92,11 +92,18 @@ class SduHealth(object):
         }
         self.frame_json = {}
 
+        self.check_login = True
+        self.check_getSignData = True
+
     def health_login(self):
         try:
             ul = str(len(self.username))
             pl = str(len(self.password))
+
             r = self.session.get(self.login_url)
+            if r.status_code != 200:
+                self.check_login = False
+                raise RuntimeError('Network Error!')
 
             lt_execution = get_lt_And_execution(r)
             lt = lt_execution['lt']
@@ -123,10 +130,13 @@ class SduHealth(object):
             if title == self.home_title:
                 print(title)
                 print("login successful")
+                self.check_login = True
             else:
                 print("login failed")
+                self.check_login = False
             print("login", result)
         except:
+            self.check_login = False
             print('login error')
 
     def getHealthUrl(self):
@@ -193,12 +203,17 @@ class SduHealth(object):
             get_sign_data_result = self.session.get(get_sign_data_url)
             print(get_sign_data_result)
 
+            if get_sign_data_result.status_code != 200:
+                self.check_getSignData = False
+                raise RuntimeError('Network Error!')
+
             frame = get_frame(get_sign_data_result).string
             frame_json = json.decode(frame)
             source_json = frame_json
             frame_json = model.generate_post_data(source_data=source_json)
             self.frame_json = frame_json
         except:
+            self.check_getSignData = False
             print("get_sign_data error")
 
     def health_checkin(self):
@@ -220,17 +235,19 @@ class SduHealth(object):
         print("getSignData ", end='')
         self.get_sign_data()
 
-        print("Strat Checkin!")
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
             self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
-
         checkin_body = json.encode(self.frame_json)
-        try:
-            result = self.session.post(checkin_url, data=checkin_body,
-                                       headers=self.checkin_header)
-            print("Checkin", result)
-        except:
-            print("Check error")
+        print("Strat Checkin!")
+        if self.check_getSignData == True:
+            try:
+                result = self.session.post(checkin_url, data=checkin_body,
+                                           headers=self.checkin_header)
+                print("Checkin", result)
+            except:
+                print("Check error")
+        else:
+            print("Network Error!")
 
     def health_logout(self):
         try:
@@ -247,14 +264,28 @@ class SduHealth(object):
         self.session.close()
 
 
-if __name__ == "__main__":
+def main():
     with open("./userinfo.txt") as f:
         info = f.readlines()
         user = info[0].strip("\n")
         password = info[1].strip("\n")
-    sdu = SduHealth(username=user, password=password)
-    sdu.health_login()
-    # ------------------
-    sdu.health_checkin()
-    # ------------------
-    sdu.health_logout()
+    try:
+        sdu = SduHealth(username=user, password=password)
+
+        sdu.health_login()
+        if sdu.check_login == False:
+            print("Login Error")
+            raise RuntimeError("Login Error")
+
+        sdu.health_checkin()
+        if sdu.check_getSignData == False:
+            print("Checkin Error")
+            raise RuntimeError("Checkin Error")
+
+        sdu.health_logout()
+    except:
+        print("Failed")
+
+
+if __name__ == "__main__":
+    main()

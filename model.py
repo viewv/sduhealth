@@ -112,7 +112,6 @@ def generate_post_data(source_data):
     model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["DQJZDZ"] = dqjzdz
     model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["CLSJ"] = clsj
 
-   
     model_data["body"]["dataStores"]["variable"] = source_data["body"]["dataStores"]["variable"]
     model_data["body"]["parameters"] = source_data["body"]["parameters"]
 
