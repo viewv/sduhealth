@@ -207,8 +207,6 @@ class SduHealth(object):
     def change_date(self):
         frame_json = self.frame_json
         current_date = get_current_date(TIME_ZONE)
-        print(frame_json["body"]["dataStores"]
-              ["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"])
         self.frame_json = frame_json
 
     def health_checkin(self):
