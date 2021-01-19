@@ -210,6 +210,7 @@ class SduHealth(object):
                 raise RuntimeError('Network Error!')
 
             frame = get_frame(get_sign_data_result).string
+            print(frame)
             frame_json = json.decode(frame)
             source_json = frame_json
             frame_json = model.generate_post_data(source_data=source_json)
@@ -265,12 +266,14 @@ class SduHealth(object):
             print("logout ?")
         self.session.close()
 
+
 def read():
     studentIDs = []
     studentPasswords = []
     if 'CONFIG' in os.environ:
         try:
-            config_current = yaml.load(os.environ['CONFIG'], Loader=yaml.FullLoader)
+            config_current = yaml.load(
+                os.environ['CONFIG'], Loader=yaml.FullLoader)
             studentIDs = config_current['jobs']['studentID']
             studentPasswords = config_current['jobs']['studentPassword']
             return studentIDs, studentPasswords
@@ -283,6 +286,7 @@ def read():
         studentIDs = config_current['jobs']['studentID']
         studentPasswords = config_current['jobs']['studentPassword']
         return studentIDs, studentPasswords
+
 
 def main():
     users, passwords = read()
