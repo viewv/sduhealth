@@ -7,7 +7,7 @@ TIME_ZONE = 'Asia/Shanghai'
 
 
 def test(data):
-    print("Model!!!!")
+    print("model")
     print(data)
 
 

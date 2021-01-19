@@ -241,7 +241,7 @@ class SduHealth(object):
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
             self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
         checkin_body = json.encode(self.frame_json)
-        print("Strat Checkin!")
+        print("Start Checkin!")
         if self.check_getSignData == True:
             try:
                 result = self.session.post(checkin_url, data=checkin_body,

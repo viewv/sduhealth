@@ -11,10 +11,12 @@
 
 本程序依赖于：
 
-- nodejs
-- python3
+- [Node.js](https://nodejs.org/en/)
+- [Python3](https://www.python.org)
 
 推荐使用 GitHub Action 的运行方式，可以方便的实现每日自动打卡。
+
+注意需要你使用本程序打卡前一天手动打过卡，且当天没有打过卡。
 
 ### Github Action 运行
 
@@ -24,7 +26,7 @@
 
 ![Screen Shot 2021-01-19 at 19.06.10](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.06.10.png)
 
-之后新建一个 secrets，Name 为 CONFIG，Value 就是之前的yaml文件全部复制进去即可：
+之后新建一个 secret，Name 为 CONFIG，Value 就是你编辑的包含你的学号密码的 yaml 文件内容全部复制进去即可：
 
 ![Screen Shot 2021-01-19 at 19.08.02](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.08.02.png)
 
@@ -50,9 +52,7 @@ pip install -r requirements.txt
 
 安装 python 所需依赖之后，需要把configexample.yml文件改名为config.yml，然后根据文件里面的内容指示填入账号和密码。
 
-然后就可以运行程序进行打卡了
-
-注意需要你使用本程序打卡前一天手动打过卡，且当天没有打过卡。
+然后就可以运行程序进行打卡了。
 
 ## 程序分析
 
