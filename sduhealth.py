@@ -3,7 +3,7 @@ import execjs
 import secrets
 import demjson as json
 
-import Model
+import model
 
 from bs4 import BeautifulSoup
 
@@ -196,7 +196,7 @@ class SduHealth(object):
             frame = get_frame(get_sign_data_result).string
             frame_json = json.decode(frame)
             source_json = frame_json
-            frame_json = Model.generate_post_data(source_data=source_json)
+            frame_json = model.generate_post_data(source_data=source_json)
             self.frame_json = frame_json
         except:
             print("get_sign_data error")
