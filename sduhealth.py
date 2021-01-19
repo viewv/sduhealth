@@ -292,29 +292,23 @@ def main():
     users, passwords = read()
     for i in range(0, len(users)):
         print("sign for ", end="")
-        # print("user ", end="")
         print(users[i])
-        # print("password ", end="")
-        # print(passwords[i])
 
         user = users[i]
         password = passwords[i]
-        try:
-            sdu = SduHealth(username=user, password=password)
+        sdu = SduHealth(username=user, password=password)
 
-            sdu.health_login()
-            if sdu.check_login == False:
-                print("Login Error")
-                raise RuntimeError("Login Error")
+        sdu.health_login()
+        if sdu.check_login == False:
+            print("Login Error")
+            raise RuntimeError("Login Error")
 
-            sdu.health_checkin()
-            if sdu.check_getSignData == False:
-                print("Checkin Error")
-                raise RuntimeError("Checkin Error")
-            print("Checkin Successful")
-            sdu.health_logout()
-        except:
-            print("Failed")
+        sdu.health_checkin()
+        if sdu.check_getSignData == False:
+            print("Checkin Error")
+            raise RuntimeError("Checkin Error")
+        print("Checkin Successful")
+        sdu.health_logout()
 
 
 if __name__ == "__main__":
