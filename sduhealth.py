@@ -5,6 +5,8 @@ import execjs
 import secrets
 import demjson as json
 
+import Model
+
 from bs4 import BeautifulSoup
 
 TIME_ZONE = 'Asia/Shanghai'
