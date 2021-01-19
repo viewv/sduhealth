@@ -96,6 +96,7 @@ class SduHealth(object):
 
         self.check_login = True
         self.check_getSignData = True
+        self.check_checkin = True
 
     def health_login(self):
         try:
@@ -207,7 +208,7 @@ class SduHealth(object):
 
             if get_sign_data_result.status_code != 200:
                 self.check_getSignData = False
-                raise RuntimeError('Network Error!')
+                raise RuntimeError('Get Signin Data Network Error!')
 
             frame = get_frame(get_sign_data_result).string
             # print(frame)
@@ -241,14 +242,19 @@ class SduHealth(object):
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
             self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
         checkin_body = json.encode(self.frame_json)
+
         print("Start Checkin!")
         if self.check_getSignData == True:
             try:
                 result = self.session.post(checkin_url, data=checkin_body,
                                            headers=self.checkin_header)
                 print("Checkin", result)
+
+                if result.status_code != 200:
+                    self.check_checkin = False
+                    raise RuntimeError("Checkin Network Error")
             except:
-                print("Check error")
+                self.check_checkin = False
         else:
             print("Network Error!")
 
@@ -305,8 +311,13 @@ def main():
 
         sdu.health_checkin()
         if sdu.check_getSignData == False:
+            print("Get Sign Data Error")
+            raise RuntimeError("Get Sign Data Error")
+
+        if sdu.check_checkin == False:
             print("Checkin Error")
             raise RuntimeError("Checkin Error")
+
         print("Checkin Successful")
         sdu.health_logout()
 
