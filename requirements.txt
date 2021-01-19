@@ -14,7 +14,6 @@ pycosat==0.6.3
 pycparser==2.20
 pycryptodome==3.9.9
 PyExecJS==1.5.1
-pylint==2.5.3
 pymemcache==3.4.0
 pyOpenSSL==19.1.0
 PySocks==1.7.1

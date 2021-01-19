@@ -281,7 +281,7 @@ def main():
         if sdu.check_getSignData == False:
             print("Checkin Error")
             raise RuntimeError("Checkin Error")
-
+        print("Checkin Successful")
         sdu.health_logout()
     except:
         print("Failed")
