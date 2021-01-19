@@ -6,6 +6,7 @@ config.yml
 # macOS
 .DS_Store
 
+# editor
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
