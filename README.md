@@ -1,6 +1,6 @@
 # SDUHealth
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 山东大学健康自动打卡
@@ -69,6 +69,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://tech.viewv.top"><img src="https://avatars3.githubusercontent.com/u/32566594?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Zhang XueNan</b></sub></a><br /><a href="https://github.com/viewv/sduhealth/commits?author=viewv" title="Code">💻</a></td>
+    <td align="center"><a href="https://nekokiku.cn/"><img src="https://avatars3.githubusercontent.com/u/34064940?v=4?s=100" width="100px;" alt=""/><br /><sub><b>menma</b></sub></a><br /><a href="https://github.com/viewv/sduhealth/commits?author=nekomiao123" title="Code">💻</a></td>
   </tr>
 </table>
 
