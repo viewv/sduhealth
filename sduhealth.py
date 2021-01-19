@@ -2,6 +2,8 @@ import requests
 import execjs
 import secrets
 import demjson as json
+import os
+import yaml
 
 import model
 
@@ -235,19 +237,19 @@ class SduHealth(object):
         print("getSignData ", end='')
         self.get_sign_data()
 
-        checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
-            self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
-        checkin_body = json.encode(self.frame_json)
-        print("Strat Checkin!")
-        if self.check_getSignData == True:
-            try:
-                result = self.session.post(checkin_url, data=checkin_body,
-                                           headers=self.checkin_header)
-                print("Checkin", result)
-            except:
-                print("Check error")
-        else:
-            print("Network Error!")
+        # checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
+        #     self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
+        # checkin_body = json.encode(self.frame_json)
+        # print("Strat Checkin!")
+        # if self.check_getSignData == True:
+        #     try:
+        #         result = self.session.post(checkin_url, data=checkin_body,
+        #                                    headers=self.checkin_header)
+        #         print("Checkin", result)
+        #     except:
+        #         print("Check error")
+        # else:
+        #     print("Network Error!")
 
     def health_logout(self):
         try:
@@ -263,28 +265,52 @@ class SduHealth(object):
             print("logout ?")
         self.session.close()
 
+def read():
+    studentIDs = []
+    studentPasswords = []
+    if 'CONFIG' in os.environ:
+        try:
+            config_current = yaml.load(os.environ['CONFIG'], Loader=yaml.FullLoader)
+            studentIDs = config_current['jobs']['studentID']
+            studentPasswords = config_current['jobs']['studentPassword']
+            return studentIDs, studentPasswords
+        except:
+            print("获取学号以及密码出错，请检查yaml文件")
+    else:
+        with open("./config.yml", mode='r', encoding='utf-8') as f:
+            config_current = yaml.load(f, Loader=yaml.FullLoader)
+
+        studentIDs = config_current['jobs']['studentID']
+        studentPasswords = config_current['jobs']['studentPassword']
+        return studentIDs, studentPasswords
 
 def main():
-    with open("./userinfo.txt") as f:
-        info = f.readlines()
-        user = info[0].strip("\n")
-        password = info[1].strip("\n")
-    try:
-        sdu = SduHealth(username=user, password=password)
+    users, passwords = read()
+    for i in range(0, len(users)):
+        print("sign for ", end="")
+        # print("user ", end="")
+        print(users[i])
+        # print("password ", end="")
+        # print(passwords[i])
 
-        sdu.health_login()
-        if sdu.check_login == False:
-            print("Login Error")
-            raise RuntimeError("Login Error")
+        user = users[i]
+        password = passwords[i]
+        try:
+            sdu = SduHealth(username=user, password=password)
 
-        sdu.health_checkin()
-        if sdu.check_getSignData == False:
-            print("Checkin Error")
-            raise RuntimeError("Checkin Error")
-        print("Checkin Successful")
-        sdu.health_logout()
-    except:
-        print("Failed")
+            sdu.health_login()
+            if sdu.check_login == False:
+                print("Login Error")
+                raise RuntimeError("Login Error")
+
+            sdu.health_checkin()
+            if sdu.check_getSignData == False:
+                print("Checkin Error")
+                raise RuntimeError("Checkin Error")
+            print("Checkin Successful")
+            sdu.health_logout()
+        except:
+            print("Failed")
 
 
 if __name__ == "__main__":
