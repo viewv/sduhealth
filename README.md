@@ -1,4 +1,7 @@
 # SDUHealth
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 山东大学健康自动打卡
 
@@ -55,3 +58,23 @@ pip install -r requirements.txt
 
 想知道这个程序如何工作的，出现了 bug 想修改代码？欢迎阅读 [山东大学健康打卡系统分析](https://github.com/viewv/sduhealth/blob/main/analysis.md) ！
 
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://tech.viewv.top"><img src="https://avatars3.githubusercontent.com/u/32566594?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Zhang XueNan</b></sub></a><br /><a href="https://github.com/viewv/sduhealth/commits?author=viewv" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
