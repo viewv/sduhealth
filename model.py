@@ -43,7 +43,16 @@ def generate_post_data(source_data):
 
     # current_timestamp = get_current_stamp()
 
-    source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]
+    # if you didn't click the "暂存" button
+    if "535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record" in source_data["body"]["dataStores"]:
+        source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]
+        model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"] = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
+        # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
+        # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
+    else:
+        source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]
+        del model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
+        del model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["_o"]
 
     zh = source_record["ZH"]                    # student id
     xm = source_record["XM"]                    # student name
@@ -103,10 +112,7 @@ def generate_post_data(source_data):
     model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["DQJZDZ"] = dqjzdz
     model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["CLSJ"] = clsj
 
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"] = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
-    # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
-    # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
-
+   
     model_data["body"]["dataStores"]["variable"] = source_data["body"]["dataStores"]["variable"]
     model_data["body"]["parameters"] = source_data["body"]["parameters"]
 
