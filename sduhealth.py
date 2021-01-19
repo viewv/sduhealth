@@ -208,6 +208,7 @@ class SduHealth(object):
                 raise RuntimeError('Network Error!')
 
             frame = get_frame(get_sign_data_result).string
+            print(frame)
             frame_json = json.decode(frame)
             source_json = frame_json
             frame_json = model.generate_post_data(source_data=source_json)
