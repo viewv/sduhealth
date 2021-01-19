@@ -210,7 +210,7 @@ class SduHealth(object):
                 raise RuntimeError('Network Error!')
 
             frame = get_frame(get_sign_data_result).string
-            print(frame)
+            # print(frame)
             frame_json = json.decode(frame)
             source_json = frame_json
             frame_json = model.generate_post_data(source_data=source_json)
@@ -238,19 +238,19 @@ class SduHealth(object):
         print("getSignData ", end='')
         self.get_sign_data()
 
-        # checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
-        #     self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
-        # checkin_body = json.encode(self.frame_json)
-        # print("Strat Checkin!")
-        # if self.check_getSignData == True:
-        #     try:
-        #         result = self.session.post(checkin_url, data=checkin_body,
-        #                                    headers=self.checkin_header)
-        #         print("Checkin", result)
-        #     except:
-        #         print("Check error")
-        # else:
-        #     print("Network Error!")
+        checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
+            self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
+        checkin_body = json.encode(self.frame_json)
+        print("Strat Checkin!")
+        if self.check_getSignData == True:
+            try:
+                result = self.session.post(checkin_url, data=checkin_body,
+                                           headers=self.checkin_header)
+                print("Checkin", result)
+            except:
+                print("Check error")
+        else:
+            print("Network Error!")
 
     def health_logout(self):
         try:
