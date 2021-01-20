@@ -3,7 +3,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-山东大学健康自动打卡
+山东大学学生每日健康状况填报自动打卡。
 
 **注意：本程序的适用范围为一个健康的有理智的学生，暂时只实现了离校生的打卡，未来也许会实现在校生的打卡，如果你身体不适，请勿使用本程序打卡，因本程序会自动上传健康的数据。**
 
@@ -40,7 +40,7 @@ Enable 本仓库已经配置好的 GitHub Action workflow，之后点击 heal_si
 
 ![Screen Shot 2021-01-19 at 19.11.30](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.11.30.png)
 
-你现在可以选择 Run workflow 手动触发运行，本仓库也配置了每天的自动运行，你可以打开 GitHub Action 的运行结果提示，这样就可以简单的实现每天的打卡任务。 
+你现在可以选择 Run workflow 手动触发运行，本仓库也配置了每天的自动运行，你可以打开 GitHub Action 的运行结果提示，这样就可以简单的实现每天的打卡任务。
 
 ### 本地运行
 
@@ -57,7 +57,6 @@ pip install -r requirements.txt
 ## 程序分析
 
 想知道这个程序如何工作的，出现了 bug 想修改代码？欢迎阅读 [山东大学健康打卡系统分析](https://github.com/viewv/sduhealth/blob/main/analysis.md) ！
-
 
 ## Contributors ✨
 
