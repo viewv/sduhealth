@@ -40,7 +40,7 @@ def generate_post_data(source_data):
     # current_date_time = current_date + ' 00:00:00'
 
     yesterday_date = get_yesterday_date(TIME_ZONE)
-    yesterday_date_time = yesterday_date + ' 07:00:00'
+    yesterday_date_time = yesterday_date + ' 09:00:00'
 
     # current_timestamp = get_current_stamp()
 
