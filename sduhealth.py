@@ -244,7 +244,6 @@ class SduHealth(object):
         if self.whether_signed:
             print("You have signed today")
             return
-        # print("whether cotinue")
 
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
             self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
@@ -291,7 +290,7 @@ def read():
             studentPasswords = config_current['jobs']['studentPassword']
             return studentIDs, studentPasswords
         except:
-            print("获取学号以及密码出错，请检查yaml文件")
+            print("获取学号以及密码出错，请检查yml文件")
     else:
         with open("./config.yml", mode='r', encoding='utf-8') as f:
             config_current = yaml.load(f, Loader=yaml.FullLoader)
@@ -327,6 +326,7 @@ def main():
 
         print("Checkin Successful")
         sdu.health_logout()
+        print("Logout Successful")
 
 
 if __name__ == "__main__":
