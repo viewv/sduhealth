@@ -33,10 +33,11 @@ def get_current_stamp():
 
 
 def generate_post_data(source_data):
+    whether_signed = False
     model_data = json.decode_file("./model.json")
 
     current_date = get_current_date(TIME_ZONE)
-    # current_date_time = current_date + ' 07:00:00'
+    current_date_time = current_date + ' 00:00:00'
 
     yesterday_date = get_yesterday_date(TIME_ZONE)
     yesterday_date_time = yesterday_date + ' 07:00:00'
@@ -47,6 +48,8 @@ def generate_post_data(source_data):
     if "535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record" in source_data["body"]["dataStores"]:
         source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]
         model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"] = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
+        if source_record['SBSJ_STR'] == current_date_time:
+            whether_signed = True
         # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
         # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
     else:
@@ -117,4 +120,4 @@ def generate_post_data(source_data):
 
     json.encode_to_file("./example.json", model_data, overwrite=True)
 
-    return model_data
+    return model_data, whether_signed

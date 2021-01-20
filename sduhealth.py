@@ -97,6 +97,7 @@ class SduHealth(object):
         self.check_login = True
         self.check_getSignData = True
         self.check_checkin = True
+        self.whether_signed = False
 
     def health_login(self):
         try:
@@ -214,7 +215,8 @@ class SduHealth(object):
             # print(frame)
             frame_json = json.decode(frame)
             source_json = frame_json
-            frame_json = model.generate_post_data(source_data=source_json)
+            # json.encode_to_file("./test.json", source_json, overwrite=True)
+            frame_json, self.whether_signed = model.generate_post_data(source_data=source_json)
             self.frame_json = frame_json
         except:
             self.check_getSignData = False
@@ -238,6 +240,11 @@ class SduHealth(object):
 
         print("getSignData ", end='')
         self.get_sign_data()
+
+        if self.whether_signed:
+            print("You have signed today")
+            return
+        # print("whether cotinue")
 
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
             self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
