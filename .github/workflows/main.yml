@@ -1,12 +1,12 @@
 name: heal_sign
 
 on: 
-  workflow_dispatch:
+  push:
   schedule:
-    - cron: '30 6 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
-  build:
+  checkin:
 
     runs-on: ubuntu-latest
 
