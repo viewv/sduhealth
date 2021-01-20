@@ -1,6 +1,7 @@
 name: heal_sign
 
 on: 
+  workflow_dispatch:
   push:
   schedule:
     - cron: '0 0 * * *'
