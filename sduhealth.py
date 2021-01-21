@@ -216,7 +216,8 @@ class SduHealth(object):
             frame_json = json.decode(frame)
             source_json = frame_json
             # json.encode_to_file("./test.json", source_json, overwrite=True)
-            frame_json, self.whether_signed = model.generate_post_data(source_data=source_json)
+            frame_json, self.whether_signed = model.generate_post_data(
+                source_data=source_json)
             self.frame_json = frame_json
         except:
             self.check_getSignData = False
@@ -303,8 +304,7 @@ def read():
 def main():
     users, passwords = read()
     for i in range(0, len(users)):
-        print("sign for ", end="")
-        print(users[i])
+        print("sign for ", users[i][-3:])
 
         user = users[i]
         password = passwords[i]
