@@ -1,0 +1,31 @@
+name: health_checkin
+
+on: 
+  schedule:
+    - cron: '35 2 * * *'
+  push:
+    branches: [ main ]
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: "12.x"
+    - name: 运行打卡脚本
+      env:
+        CONFIG: ${{ secrets.CONFIG }}
+      run: |
+        python sduhealth.py
