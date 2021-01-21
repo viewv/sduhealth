@@ -46,6 +46,47 @@ Enable 本仓库已经配置好的 GitHub Actions workflow，之后点击 heal_s
 >
 > 最近我们发现 GitHub Actions workflow 有延时问题， 有可能您的实际运行时间与设置的不同。
 
+<details>
+<summary>关于repo_sync.yml的使用说明</summary>
+
+这个文件创建了一个定时自动同步源仓库内所有代码的github actions。
+
+> ⚠️ 注意
+>
+> 该github actions执行后会自动覆盖原仓库内的所有代码，并更新为源仓库的代码，所有自定义的修改将不会得到保留（一般来说，也没什么需要自定义的，实在是需要自定义，可以手动执行该github actions之后，将其设置为disable）。
+
+在fork了代码之后，首先需要去申请一个GitHub Personal Access Token，该Token让此github actions拥有了更改指定仓库代码的权限。具体操作如下：
+
+先选择这个settings
+
+![image-20210121121329851](https://cdn.jsdelivr.net/gh/nekomiao123/pic/img/image-20210121121329851.png)
+
+然后选择Developer Settings
+
+![image-20210121121525838](https://cdn.jsdelivr.net/gh/nekomiao123/pic/img/image-20210121121525838.png)
+
+之后再选择Personal access tokens 点击里面的Generate new token
+
+![image-20210121121640260](https://cdn.jsdelivr.net/gh/nekomiao123/pic/img/image-20210121121640260.png)
+
+之后先随便取个好记的名字，然后勾选前两项
+
+![image-20210121121747207](https://cdn.jsdelivr.net/gh/nekomiao123/pic/img/image-20210121121747207.png)
+
+最后点击下面的Generate token即可，这样就能获得一串类似这样的字符，赶紧复制下来，它只会显示这一次
+
+![image-20210121121953685](https://cdn.jsdelivr.net/gh/nekomiao123/pic/img/image-20210121121953685.png)
+
+然后去新建一个 secrets（跟上面建立secrets的教程一样）
+
+Name 是 PAT
+
+Value 是刚才你复制的这一串字符
+
+</details>
+
+到这里，该github actions就可以使用了。
+
 ### 本地运行
 
 在本地安装好环境后，运行：
