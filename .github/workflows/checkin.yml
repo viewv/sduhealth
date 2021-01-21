@@ -1,4 +1,4 @@
-name: health_checkin
+name: checkin
 
 on:
   schedule:
