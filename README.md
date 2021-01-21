@@ -34,11 +34,13 @@
 
 ![Screen Shot 2021-01-19 at 19.09.06](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.09.06.png)
 
-Enable 本仓库已经配置好的 GitHub Actions workflow，之后点击 heal_sign 打开配置选项：![Screen Shot 2021-01-19 at 19.10.46](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.10.46.png)
+Enable 本仓库已经配置好的 GitHub Actions workflow，之后点击 checkin 打开配置选项：
+
+![checkin workflow](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen Shot 2021-01-21 at 15.11.44.png)
 
  Enable workflow，之后得到下面的界面：
 
-![Screen Shot 2021-01-19 at 19.11.30](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.11.30.png)
+![Screen Shot 2021-01-21 at 15.12.33](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-21%20at%2015.12.33.png)
 
 你现在可以选择 Run workflow 手动触发运行，本仓库也配置了每天的自动运行，你可以打开 GitHub Actions 的运行结果提示，这样就可以简单的实现每天的打卡任务。
 
