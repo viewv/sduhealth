@@ -14,11 +14,11 @@
 - [Node.js](https://nodejs.org/en/)
 - [Python3](https://www.python.org)
 
-推荐使用 GitHub Action 的运行方式，可以方便的实现每日自动打卡。
+推荐使用 GitHub Actions 的运行方式，可以方便的实现每日自动打卡。
 
 注意需要你使用本程序打卡前一天手动打过卡，且当天没有打过卡，之后每天就可以都只使用自动打卡了。
 
-### Github Action 运行
+### Github Actions 运行
 
 首先复制 configexample.yml 文件里面的所有内容，然后在本地进行编辑，根据文件的指示填入账号和密码，之后可以去 [yaml检测](https://www.bejson.com/validators/yaml_editor/) 检测一下文件的正确性，支持多账户，当然前提是你知道别人的密码。
 
@@ -30,17 +30,21 @@
 
 ![Screen Shot 2021-01-19 at 19.08.02](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.08.02.png)
 
-保存即可，之后转到仓库的 Action 选项卡：
+保存即可，之后转到仓库的 Actions 选项卡：
 
 ![Screen Shot 2021-01-19 at 19.09.06](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.09.06.png)
 
-Enable 本仓库已经配置好的 GitHub Action workflow，之后点击 heal_sign 打开配置选项：![Screen Shot 2021-01-19 at 19.10.46](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.10.46.png)
+Enable 本仓库已经配置好的 GitHub Actions workflow，之后点击 heal_sign 打开配置选项：![Screen Shot 2021-01-19 at 19.10.46](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.10.46.png)
 
  Enable workflow，之后得到下面的界面：
 
 ![Screen Shot 2021-01-19 at 19.11.30](https://cdn.jsdelivr.net/gh/viewv/Pico@master/uPic/Screen%20Shot%202021-01-19%20at%2019.11.30.png)
 
-你现在可以选择 Run workflow 手动触发运行，本仓库也配置了每天的自动运行，你可以打开 GitHub Action 的运行结果提示，这样就可以简单的实现每天的打卡任务。
+你现在可以选择 Run workflow 手动触发运行，本仓库也配置了每天的自动运行，你可以打开 GitHub Actions 的运行结果提示，这样就可以简单的实现每天的打卡任务。
+
+> ⚠️ 注意
+>
+> 最近我们发现 GitHub Actions workflow 有延时问题， 有可能您的实际运行时间与设置的不同。
 
 ### 本地运行
 
