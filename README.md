@@ -107,7 +107,7 @@ python sduhealth.py
 
 ## 程序分析
 
-想知道这个程序如何工作的，出现了 bug 想修改代码？欢迎阅读 [山东大学健康打卡系统分析](https://github.com/viewv/sduhealth/blob/main/analysis.md) ！
+想知道这个程序如何工作的，出现了 bug 想修改代码？欢迎阅读 [山东大学健康打卡系统分析](https://github.com/viewv/sduhealth/blob/main/doc/analysis.md) ！
 
 ## Contributors ✨
 
