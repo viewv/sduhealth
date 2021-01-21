@@ -89,15 +89,19 @@ Value 是刚才你复制的这一串字符
 
 ### 本地运行
 
-在本地安装好环境后，运行：
+在本地安装好环境后，下载或者 clone 本仓库后，到项目文件夹下运行如下命令安装 Python 所需依赖：
 
 ```bash
 pip install -r requirements.txt
 ```
 
-安装 python 所需依赖之后，需要把configexample.yml文件改名为config.yml，然后根据文件里面的内容指示填入账号和密码。
+安装好本程序所需依赖之后，需要把 configexample.yml 文件改名为 config.yml，然后根据文件里面的内容指示填入账号和密码。
 
-然后就可以运行程序进行打卡了。
+之后运行如下命令运行 sduhealth.py 便会运行程序进行打卡。
+
+```bash
+python sduhealth.py
+```
 
 ## 程序分析
 
