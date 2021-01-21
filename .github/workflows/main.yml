@@ -2,7 +2,8 @@ name: health_checkin
 
 on: 
   schedule:
-    - cron: '40 2 * * *'
+    - cron: '50 2 * * *'
+  workflow_dispatch:
 
 jobs:
   checkin:
