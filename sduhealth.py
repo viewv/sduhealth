@@ -324,7 +324,9 @@ def main():
             print("Checkin Error")
             raise RuntimeError("Checkin Error")
 
-        print("Checkin Successful")
+        if not sdu.whether_signed:
+            print("Checkin Successful")
+            
         sdu.health_logout()
         print("Logout Successful")
 
