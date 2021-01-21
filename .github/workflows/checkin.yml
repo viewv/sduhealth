@@ -3,7 +3,11 @@ name: checkin
 on:
   schedule:
     - cron: "55 2 * * *"
-
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  
 jobs:
   checkin:
     runs-on: ubuntu-latest
