@@ -47,6 +47,8 @@ Enable 本仓库已经配置好的 GitHub Actions workflow，之后点击 checki
 > ⚠️ 注意
 >
 > 最近我们发现 GitHub Actions workflow 有延时问题， 有可能您的实际运行时间与设置的不同。
+>
+> 又由于 GitHub 可能的设计问题，您有可能需要先手动运行一次打卡 workflow 才可以激活定时运行。
 
 <details>
 <summary>关于 repo_sync.yml 的使用说明</summary>
