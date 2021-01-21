@@ -7,6 +7,7 @@ config.yml
 .DS_Store
 
 # editor
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
