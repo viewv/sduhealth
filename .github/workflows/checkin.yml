@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-  
+
 jobs:
   checkin:
     runs-on: ubuntu-latest

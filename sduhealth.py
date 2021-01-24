@@ -324,7 +324,7 @@ def main():
 
         if not sdu.whether_signed:
             print("Checkin Successful")
-            
+
         sdu.health_logout()
         print("Logout Successful")
 
