@@ -11,8 +11,7 @@
 
 本程序依赖于：
 
-- [Node.js](https://nodejs.org/en/)
-- [Python3](https://www.python.org)
+**[Python3](https://www.python.org)**
 
 推荐使用 GitHub Actions 的运行方式，可以方便的实现每日自动打卡。
 
