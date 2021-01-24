@@ -1,11 +1,11 @@
 import requests
-import execjs
 import secrets
 import demjson as json
 import os
 import yaml
 
 import model
+import encrypt
 
 from bs4 import BeautifulSoup
 
@@ -20,9 +20,7 @@ def js_from_file(filename):
 
 def generate_their_RSA(username, password, lt):
     # return they called 'RSA' string, note here just return 'RSA' string!
-    context = execjs.compile(js_from_file('./js/des.js'))
-    rsa = context.call("strEnc", username + password + lt, "1", "2", "3")
-    return rsa
+    return encrypt.strenc(username + password + lt, "1", "2", "3")
 
 
 def get_lt_And_execution(result):

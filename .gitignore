@@ -133,3 +133,6 @@ dmypy.json
 real.json
 test.json
 userinfo.txt
+
+# PyCharm
+.idea
