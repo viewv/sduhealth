@@ -1,5 +1,4 @@
 astroid==2.4.2
-autopep8==1.5.4
 beautifulsoup4==4.9.1
 certifi==2020.12.5
 cffi==1.14.0
@@ -13,7 +12,6 @@ pycodestyle==2.6.0
 pycosat==0.6.3
 pycparser==2.20
 pycryptodome==3.9.9
-PyExecJS==1.5.1
 pymemcache==3.4.0
 pyOpenSSL==19.1.0
 PySocks==1.7.1
@@ -26,4 +24,3 @@ toml==0.10.1
 typed-ast==1.4.1
 urllib3==1.25.8
 wrapt==1.11.2
-
