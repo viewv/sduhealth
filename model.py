@@ -44,6 +44,8 @@ def generate_post_data(source_data):
     # This code may change aperiodically, we don't know how it works.
     unknown_code = sorted_key[1][0]
 
+    rowSetName = source_data["body"]["dataStores"][unknown_code]["rowSetName"]
+
     whether_signed = False
     model_data = json.decode_file("./json/model.json")
 
@@ -70,6 +72,10 @@ def generate_post_data(source_data):
     new_model_data["body"]["dataStores"][unknown_code_use]["parameters"]["queryds"] = unknown_code_use
     new_model_data["body"]["dataStores"][unknown_code_record]["name"] = unknown_code_record
     new_model_data["body"]["dataStores"][unknown_code_record]["parameters"]["queryds"] = unknown_code_use
+
+    new_model_data["body"]["dataStores"][unknown_code_use]["rowSetName"] = rowSetName
+    new_model_data["body"]["dataStores"][unknown_code_record]["rowSetName"] = rowSetName
+
 
     json.encode_to_file("./json/new_model.json", new_model_data, overwrite=True)
 
