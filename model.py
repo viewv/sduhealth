@@ -1,8 +1,8 @@
-import random as rand
 import time
 import pytz
 import datetime
 import demjson as json
+import random as rand
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -10,6 +10,12 @@ TIME_ZONE = 'Asia/Shanghai'
 def test(data):
     print("model")
     print(data)
+
+def get_random_temp():
+    temp = 36.2
+    if(rand.random() > 0.8):
+        temp += 0.1
+    return temp
 
 
 def get_current_date(timezone):
@@ -33,23 +39,29 @@ def get_current_stamp():
     return current_stamp
 
 
-def get_random_temp():
-    temp = 36.2
-    if(rand.random() > 0.8):
-        temp += 0.1
-    return temp
-
-
 def generate_post_data(source_data):
+    new_key = {}
+    for code in source_data["body"]["dataStores"]:
+        new_key[code] = len(code)
+
+    sorted_key = sorted(new_key.items(), key = lambda x:x[1])
+    # print("sorted_key",sorted_key)
+    # print("sorted_key[1][0]",sorted_key[1][0])
+
+    # This code may change aperiodically, we don't know how it works.
+    unknown_code = sorted_key[1][0]
+
+    rowSetName = source_data["body"]["dataStores"][unknown_code]["rowSetName"]
+
     whether_signed = False
     json_file = open("./json/model.json", encoding='utf-8')
     model_txt = json_file.read(-1)
     json_file.close()
+
     # add {var} feature
-
     model_txt = model_txt.replace(r"{Temp}", "%.1f"%get_random_temp())
-
     model_data = json.decode(model_txt)
+    # model_data = json.decode_file("./json/model.json")
 
     current_date = get_current_date(TIME_ZONE)
     # current_date_time = current_date + ' 00:00:00'
@@ -59,23 +71,42 @@ def generate_post_data(source_data):
 
     # current_timestamp = get_current_stamp()
 
+    unknown_code_use = unknown_code
+    unknown_code_record = unknown_code + "_record"
+    # print("unknown_code_use",unknown_code_use)
+    new_model_data = {}
+    new_model_data["header"] = model_data["header"]
+    new_model_data["body"] = {}
+    new_model_data["body"]["parameters"] = model_data["body"]["parameters"]
+    new_model_data["body"]["dataStores"] = {}
+    new_model_data["body"]["dataStores"]["variable"] = model_data["body"]["dataStores"]["variable"]
+    new_model_data["body"]["dataStores"][unknown_code_use] = model_data["body"]["dataStores"]['535b1ef6-bf51-4d4c-9ae4-5a90cdc4']
+    new_model_data["body"]["dataStores"][unknown_code_record] = model_data["body"]["dataStores"]['535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record']
+    new_model_data["body"]["dataStores"][unknown_code_use]["name"] = unknown_code_use
+    new_model_data["body"]["dataStores"][unknown_code_use]["parameters"]["queryds"] = unknown_code_use
+    new_model_data["body"]["dataStores"][unknown_code_record]["name"] = unknown_code_record
+    new_model_data["body"]["dataStores"][unknown_code_record]["parameters"]["queryds"] = unknown_code_use
+
+    new_model_data["body"]["dataStores"][unknown_code_use]["rowSetName"] = rowSetName
+    new_model_data["body"]["dataStores"][unknown_code_record]["rowSetName"] = rowSetName
+
+
+    json.encode_to_file("./json/new_model.json", new_model_data, overwrite=True)
+
+    model_data = new_model_data
     # if you didn't click the "暂存" button
-    if "2d26dfad-56ae-4cf3-ab26-87112f1e_record" in source_data["body"]["dataStores"]:
-        source_record = source_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]["rowSet"]["primary"][0]
-        # checked √
-        model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"] = source_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]
-        # checked √
-        print("today is " + source_record['SBSJ_STR'][0:10])
+    if unknown_code_record in source_data["body"]["dataStores"]:
+        source_record = source_data["body"]["dataStores"][unknown_code_record]["rowSet"]["primary"][0]
+        model_data["body"]["dataStores"][unknown_code_record] = source_data["body"]["dataStores"][unknown_code_record]
+        print("today is " + current_date)
         if source_record['SBSJ_STR'][0:10] == current_date:
             whether_signed = True
-            # checked √
-        # model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
-        # model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
+        # model_data["body"]["dataStores"][unknown_code_record]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
+        # model_data["body"]["dataStores"][unknown_code_record]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
     else:
-        # 此分支似乎并不会触发，从test.json中保存的source_data来看，总是含有uuid_record记录
-        source_record = source_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]
-        del model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]
-        del model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["_o"]
+        source_record = source_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]
+        del model_data["body"]["dataStores"][unknown_code_record]
+        del model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["_o"]
 
     zh = source_record["ZH"]                    # student id
     xm = source_record["XM"]                    # student name
@@ -111,34 +142,33 @@ def generate_post_data(source_data):
     # ZYMC = source_vars[7]["value"]              # student major
     # MOBILE = source_vars[8]["value"]            # mobile
 
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["ZH"] = zh
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["XM"] = xm
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["XSXB"] = xsxb
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["NL"] = nl
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["SZDW"] = szdw
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["ZYMC"] = zymc
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["XSLX"] = xslx
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["ZXSJ"] = zxsj
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["SBSJ"] = sbsj
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["FDYXMX"] = fdyxmx
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["JJLXRXM"] = jjlxrxm
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["JJLXRDH"] = jjlxrdh
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["JJLXRYBRGX"] = jjlxrybrgx
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["LXZT"] = lxzt
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["DQSFJJIA"] = dqsfjjia
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["sheng_TEXT"] = sheng_text
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["sheng"] = sheng
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["shi_TEXT"] = shi_text
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["shi"] = shi
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["quxian_TEXT"] = quxian_text
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["quxian"] = quxian
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["DQJZDZ"] = dqjzdz
-    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["CLSJ"] = clsj
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["ZH"] = zh
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["XM"] = xm
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["XSXB"] = xsxb
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["NL"] = nl
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["SZDW"] = szdw
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["ZYMC"] = zymc
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["XSLX"] = xslx
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["ZXSJ"] = zxsj
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["SBSJ"] = sbsj
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["FDYXMX"] = fdyxmx
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["JJLXRXM"] = jjlxrxm
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["JJLXRDH"] = jjlxrdh
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["JJLXRYBRGX"] = jjlxrybrgx
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["LXZT"] = lxzt
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["DQSFJJIA"] = dqsfjjia
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["sheng_TEXT"] = sheng_text
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["sheng"] = sheng
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["shi_TEXT"] = shi_text
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["shi"] = shi
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["quxian_TEXT"] = quxian_text
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["quxian"] = quxian
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["DQJZDZ"] = dqjzdz
+    model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["CLSJ"] = clsj
 
-    model_data["body"]["dataStores"]["variable"]["rowSet"]["primary"] = source_data["body"]["dataStores"]["variable"]["rowSet"]["primary"]
-    model_data["body"]["parameters"]["record_fk"] = source_data["body"]["parameters"]["record_fk"]
-    # 适配了目前的系统 2021/2/1
+    model_data["body"]["dataStores"]["variable"] = source_data["body"]["dataStores"]["variable"]
+    model_data["body"]["parameters"] = source_data["body"]["parameters"]
 
-    # json.encode_to_file("./json/example.json", model_data, overwrite=True)
+    json.encode_to_file("./json/example.json", model_data, overwrite=True)
 
     return model_data, whether_signed
