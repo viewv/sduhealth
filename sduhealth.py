@@ -241,7 +241,7 @@ class SduHealth(object):
         self.get_sign_data()
 
         if self.whether_signed:
-            print("You have signed today")
+            print("\033[1;32;40mYou have signed today\033[0m")
             return
 
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
