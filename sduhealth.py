@@ -302,6 +302,7 @@ def read():
 def main():
     users, passwords = read()
     for i in range(0, len(users)):
+        print('\n')
         print("Sign in for", users[i][-3:])
 
         user = users[i]
