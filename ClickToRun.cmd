@@ -1,2 +1,3 @@
+@echo off
 python sduhealth.py
-pause>0
+pause>nul
