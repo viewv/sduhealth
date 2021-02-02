@@ -139,6 +139,6 @@ def generate_post_data(source_data):
     model_data["body"]["parameters"]["record_fk"] = source_data["body"]["parameters"]["record_fk"]
     # 适配了目前的系统 2021/2/1
 
-    json.encode_to_file("./json/example.json", model_data, overwrite=True)
+    # json.encode_to_file("./json/example.json", model_data, overwrite=True)
 
     return model_data, whether_signed
