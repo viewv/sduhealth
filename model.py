@@ -2,6 +2,7 @@ import time
 import pytz
 import datetime
 import demjson as json
+import random as rand
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -9,6 +10,12 @@ TIME_ZONE = 'Asia/Shanghai'
 def test(data):
     print("model")
     print(data)
+
+def get_random_temp():
+    temp = 36.2
+    if(rand.random() > 0.8):
+        temp += 0.1
+    return temp
 
 
 def get_current_date(timezone):
@@ -47,7 +54,14 @@ def generate_post_data(source_data):
     rowSetName = source_data["body"]["dataStores"][unknown_code]["rowSetName"]
 
     whether_signed = False
-    model_data = json.decode_file("./json/model.json")
+    json_file = open("./json/model.json", encoding='utf-8')
+    model_txt = json_file.read(-1)
+    json_file.close()
+
+    # add {var} feature
+    model_txt = model_txt.replace(r"{Temp}", "%.1f"%get_random_temp())
+    model_data = json.decode(model_txt)
+    # model_data = json.decode_file("./json/model.json")
 
     current_date = get_current_date(TIME_ZONE)
     # current_date_time = current_date + ' 00:00:00'
