@@ -1,3 +1,4 @@
+import random as rand
 import time
 import pytz
 import datetime
@@ -32,9 +33,23 @@ def get_current_stamp():
     return current_stamp
 
 
+def get_random_temp():
+    temp = 36.2
+    if(rand.random() > 0.8):
+        temp += 0.1
+    return temp
+
+
 def generate_post_data(source_data):
     whether_signed = False
-    model_data = json.decode_file("./json/model.json")
+    json_file = open("./json/model-0201.json", encoding='utf-8')
+    model_txt = json_file.read(-1)
+    json_file.close()
+    # add {var} feature
+
+    model_txt = model_txt.replace(r"{Temp}", "%.1f"%get_random_temp())
+
+    model_data = json.decode(model_txt)
 
     current_date = get_current_date(TIME_ZONE)
     # current_date_time = current_date + ' 00:00:00'
@@ -45,18 +60,22 @@ def generate_post_data(source_data):
     # current_timestamp = get_current_stamp()
 
     # if you didn't click the "暂存" button
-    if "535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record" in source_data["body"]["dataStores"]:
-        source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]
-        model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"] = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
+    if "2d26dfad-56ae-4cf3-ab26-87112f1e_record" in source_data["body"]["dataStores"]:
+        source_record = source_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]["rowSet"]["primary"][0]
+        # checked √
+        model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"] = source_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]
+        # checked √
         print("today is " + source_record['SBSJ_STR'][0:10])
         if source_record['SBSJ_STR'][0:10] == current_date:
             whether_signed = True
-        # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
-        # model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
+            # checked √
+        # model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]["rowSet"]["primary"][0]["CLSJ"] = current_timestamp
+        # model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]["rowSet"]["primary"][0]["SBSJ"] = current_timestamp
     else:
-        source_record = source_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]
-        del model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record"]
-        del model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["_o"]
+        # 此分支似乎并不会触发，从test.json中保存的source_data来看，总是含有uuid_record记录
+        source_record = source_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]
+        del model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e_record"]
+        del model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["_o"]
 
     zh = source_record["ZH"]                    # student id
     xm = source_record["XM"]                    # student name
@@ -92,32 +111,33 @@ def generate_post_data(source_data):
     # ZYMC = source_vars[7]["value"]              # student major
     # MOBILE = source_vars[8]["value"]            # mobile
 
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["ZH"] = zh
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["XM"] = xm
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["XSXB"] = xsxb
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["NL"] = nl
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["SZDW"] = szdw
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["ZYMC"] = zymc
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["XSLX"] = xslx
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["ZXSJ"] = zxsj
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["SBSJ"] = sbsj
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["FDYXMX"] = fdyxmx
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["JJLXRXM"] = jjlxrxm
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["JJLXRDH"] = jjlxrdh
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["JJLXRYBRGX"] = jjlxrybrgx
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["LXZT"] = lxzt
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["DQSFJJIA"] = dqsfjjia
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["sheng_TEXT"] = sheng_text
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["sheng"] = sheng
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["shi_TEXT"] = shi_text
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["shi"] = shi
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["quxian_TEXT"] = quxian_text
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["quxian"] = quxian
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["DQJZDZ"] = dqjzdz
-    model_data["body"]["dataStores"]["535b1ef6-bf51-4d4c-9ae4-5a90cdc4"]["rowSet"]["primary"][0]["CLSJ"] = clsj
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["ZH"] = zh
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["XM"] = xm
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["XSXB"] = xsxb
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["NL"] = nl
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["SZDW"] = szdw
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["ZYMC"] = zymc
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["XSLX"] = xslx
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["ZXSJ"] = zxsj
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["SBSJ"] = sbsj
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["FDYXMX"] = fdyxmx
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["JJLXRXM"] = jjlxrxm
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["JJLXRDH"] = jjlxrdh
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["JJLXRYBRGX"] = jjlxrybrgx
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["LXZT"] = lxzt
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["DQSFJJIA"] = dqsfjjia
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["sheng_TEXT"] = sheng_text
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["sheng"] = sheng
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["shi_TEXT"] = shi_text
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["shi"] = shi
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["quxian_TEXT"] = quxian_text
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["quxian"] = quxian
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["DQJZDZ"] = dqjzdz
+    model_data["body"]["dataStores"]["2d26dfad-56ae-4cf3-ab26-87112f1e"]["rowSet"]["primary"][0]["CLSJ"] = clsj
 
-    model_data["body"]["dataStores"]["variable"] = source_data["body"]["dataStores"]["variable"]
-    model_data["body"]["parameters"] = source_data["body"]["parameters"]
+    model_data["body"]["dataStores"]["variable"]["rowSet"]["primary"] = source_data["body"]["dataStores"]["variable"]["rowSet"]["primary"]
+    model_data["body"]["parameters"]["record_fk"] = source_data["body"]["parameters"]["record_fk"]
+    # 适配了目前的系统 2021/2/1
 
     json.encode_to_file("./json/example.json", model_data, overwrite=True)
 
