@@ -97,6 +97,7 @@ CBC = 1
 PAD_NORMAL = 1
 PAD_PKCS5 = 2
 
+
 # PAD_PKCS5: is a method that will unambiguously remove all padding
 #            characters after decryption, when originally encrypted with
 #            this padding mode.
@@ -219,7 +220,7 @@ class _baseDes(object):
                 pad = self.getPadding()
             if pad:
                 data = data[:-self.block_size] + \
-                    data[-self.block_size:].rstrip(pad)
+                       data[-self.block_size:].rstrip(pad)
 
         elif padmode == PAD_PKCS5:
             if _pythonMajorVersion < 3:
@@ -247,6 +248,7 @@ class _baseDes(object):
                 raise ValueError(
                     "pyDes can only work with encoded strings, not Unicode.")
         return data
+
 
 #############################################################################
 #                   DES                     #
@@ -299,10 +301,10 @@ class des(_baseDes):
 
     # permuted choice key (table 2)
     __pc2 = [
-        13, 16, 10, 23,  0,  4,
-        2, 27, 14,  5, 20,  9,
-        22, 18, 11,  3, 25,  7,
-        15,  6, 26, 19, 12,  1,
+        13, 16, 10, 23, 0, 4,
+        2, 27, 14, 5, 20, 9,
+        22, 18, 11, 3, 25, 7,
+        15, 6, 26, 19, 12, 1,
         40, 51, 30, 36, 46, 54,
         29, 39, 50, 44, 32, 47,
         43, 48, 38, 55, 33, 52,
@@ -310,11 +312,11 @@ class des(_baseDes):
     ]
 
     # initial permutation IP
-    __ip = [57, 49, 41, 33, 25, 17, 9,  1,
+    __ip = [57, 49, 41, 33, 25, 17, 9, 1,
             59, 51, 43, 35, 27, 19, 11, 3,
             61, 53, 45, 37, 29, 21, 13, 5,
             63, 55, 47, 39, 31, 23, 15, 7,
-            56, 48, 40, 32, 24, 16, 8,  0,
+            56, 48, 40, 32, 24, 16, 8, 0,
             58, 50, 42, 34, 26, 18, 10, 2,
             60, 52, 44, 36, 28, 20, 12, 4,
             62, 54, 46, 38, 30, 22, 14, 6
@@ -322,14 +324,14 @@ class des(_baseDes):
 
     # Expansion table for turning 32 bit blocks into 48 bits
     __expansion_table = [
-        31,  0,  1,  2,  3,  4,
-        3,  4,  5,  6,  7,  8,
-        7,  8,  9, 10, 11, 12,
+        31, 0, 1, 2, 3, 4,
+        3, 4, 5, 6, 7, 8,
+        7, 8, 9, 10, 11, 12,
         11, 12, 13, 14, 15, 16,
         15, 16, 17, 18, 19, 20,
         19, 20, 21, 22, 23, 24,
         23, 24, 25, 26, 27, 28,
-        27, 28, 29, 30, 31,  0
+        27, 28, 29, 30, 31, 0
     ]
 
     # The (in)famous S-boxes
@@ -395,14 +397,14 @@ class des(_baseDes):
 
     # final permutation IP^-1
     __fp = [
-        39,  7, 47, 15, 55, 23, 63, 31,
-        38,  6, 46, 14, 54, 22, 62, 30,
-        37,  5, 45, 13, 53, 21, 61, 29,
-        36,  4, 44, 12, 52, 20, 60, 28,
-        35,  3, 43, 11, 51, 19, 59, 27,
-        34,  2, 42, 10, 50, 18, 58, 26,
-        33,  1, 41,  9, 49, 17, 57, 25,
-        32,  0, 40,  8, 48, 16, 56, 24
+        39, 7, 47, 15, 55, 23, 63, 31,
+        38, 6, 46, 14, 54, 22, 62, 30,
+        37, 5, 45, 13, 53, 21, 61, 29,
+        36, 4, 44, 12, 52, 20, 60, 28,
+        35, 3, 43, 11, 51, 19, 59, 27,
+        34, 2, 42, 10, 50, 18, 58, 26,
+        33, 1, 41, 9, 49, 17, 57, 25,
+        32, 0, 40, 8, 48, 16, 56, 24
     ]
 
     # Type of crypting being done
@@ -528,8 +530,8 @@ class des(_baseDes):
             B = [self.R[:6], self.R[6:12], self.R[12:18], self.R[18:24],
                  self.R[24:30], self.R[30:36], self.R[36:42], self.R[42:]]
             # Optimization: Replaced below commented code with above
-            #j = 0
-            #B = []
+            # j = 0
+            # B = []
             # while j < len(self.R):
             #   self.R[j] = self.R[j] ^ self.Kn[iteration][j]
             #   j += 1
@@ -563,7 +565,7 @@ class des(_baseDes):
             # Xor with L[i - 1]
             self.R = list(map(lambda x, y: x ^ y, self.R, self.L))
             # Optimization: This now replaces the below commented code
-            #j = 0
+            # j = 0
             # while j < len(self.R):
             #   self.R[j] = self.R[j] ^ self.L[j]
             #   j += 1
@@ -609,11 +611,11 @@ class des(_baseDes):
         i = 0
         dict = {}
         result = []
-        #cached = 0
-        #lines = 0
+        # cached = 0
+        # lines = 0
         while i < len(data):
             # Test code for caching encryption results
-            #lines += 1
+            # lines += 1
             # if dict.has_key(data[i:i+8]):
             # print "Cached result for: %s" % data[i:i+8]
             #   cached += 1
@@ -621,13 +623,13 @@ class des(_baseDes):
             #   i += 8
             #   continue
 
-            block = self.__String_to_BitList(data[i:i+8])
+            block = self.__String_to_BitList(data[i:i + 8])
 
             # Xor with IV if using CBC mode
             if self.getMode() == CBC:
                 if crypt_type == des.ENCRYPT:
                     block = list(map(lambda x, y: x ^ y, block, iv))
-                    #j = 0
+                    # j = 0
                     # while j < len(block):
                     #   block[j] = block[j] ^ iv[j]
                     #   j += 1
@@ -637,7 +639,7 @@ class des(_baseDes):
                 if crypt_type == des.DECRYPT:
                     processed_block = list(
                         map(lambda x, y: x ^ y, processed_block, iv))
-                    #j = 0
+                    # j = 0
                     # while j < len(processed_block):
                     #   processed_block[j] = processed_block[j] ^ iv[j]
                     #   j += 1
@@ -648,10 +650,10 @@ class des(_baseDes):
                 processed_block = self.__des_crypt(block, crypt_type)
 
             # Add the resulting crypted block to our list
-            #d = self.__BitList_to_String(processed_block)
+            # d = self.__BitList_to_String(processed_block)
             # result.append(d)
             result.append(self.__BitList_to_String(processed_block))
-            #dict[data[i:i+8]] = d
+            # dict[data[i:i+8]] = d
             i += 8
 
         # print "Lines: %d, cached: %d" % (lines, cached)
@@ -811,7 +813,7 @@ class triple_des(_baseDes):
             i = 0
             result = []
             while i < len(data):
-                block = self.__key1.crypt(data[i:i+8], ENCRYPT)
+                block = self.__key1.crypt(data[i:i + 8], ENCRYPT)
                 block = self.__key2.crypt(block, DECRYPT)
                 block = self.__key3.crypt(block, ENCRYPT)
                 self.__key1.setIV(block)
@@ -856,8 +858,8 @@ class triple_des(_baseDes):
             i = 0
             result = []
             while i < len(data):
-                iv = data[i:i+8]
-                block = self.__key3.crypt(iv,    DECRYPT)
+                iv = data[i:i + 8]
+                block = self.__key3.crypt(iv, DECRYPT)
                 block = self.__key2.crypt(block, ENCRYPT)
                 block = self.__key1.crypt(block, DECRYPT)
                 self.__key1.setIV(iv)

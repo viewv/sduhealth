@@ -1,8 +1,9 @@
-import time
-import pytz
 import datetime
-import demjson as json
 import random as rand
+import time
+
+import demjson as json
+import pytz
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -11,9 +12,10 @@ def test(data):
     print("model")
     print(data)
 
+
 def get_random_temp():
     temp = 36.2
-    if(rand.random() > 0.8):
+    if (rand.random() > 0.8):
         temp += 0.1
     return temp
 
@@ -44,7 +46,7 @@ def generate_post_data(source_data):
     for code in source_data["body"]["dataStores"]:
         new_key[code] = len(code)
 
-    sorted_key = sorted(new_key.items(), key = lambda x:x[1])
+    sorted_key = sorted(new_key.items(), key=lambda x: x[1])
     # print("sorted_key",sorted_key)
     # print("sorted_key[1][0]",sorted_key[1][0])
 
@@ -59,7 +61,7 @@ def generate_post_data(source_data):
     json_file.close()
 
     # add {var} feature
-    model_txt = model_txt.replace(r"{Temp}", "%.1f"%get_random_temp())
+    model_txt = model_txt.replace(r"{Temp}", "%.1f" % get_random_temp())
     model_data = json.decode(model_txt)
     # model_data = json.decode_file("./json/model.json")
 
@@ -80,8 +82,10 @@ def generate_post_data(source_data):
     new_model_data["body"]["parameters"] = model_data["body"]["parameters"]
     new_model_data["body"]["dataStores"] = {}
     new_model_data["body"]["dataStores"]["variable"] = model_data["body"]["dataStores"]["variable"]
-    new_model_data["body"]["dataStores"][unknown_code_use] = model_data["body"]["dataStores"]['535b1ef6-bf51-4d4c-9ae4-5a90cdc4']
-    new_model_data["body"]["dataStores"][unknown_code_record] = model_data["body"]["dataStores"]['535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record']
+    new_model_data["body"]["dataStores"][unknown_code_use] = model_data["body"]["dataStores"][
+        '535b1ef6-bf51-4d4c-9ae4-5a90cdc4']
+    new_model_data["body"]["dataStores"][unknown_code_record] = model_data["body"]["dataStores"][
+        '535b1ef6-bf51-4d4c-9ae4-5a90cdc4_record']
     new_model_data["body"]["dataStores"][unknown_code_use]["name"] = unknown_code_use
     new_model_data["body"]["dataStores"][unknown_code_use]["parameters"]["queryds"] = unknown_code_use
     new_model_data["body"]["dataStores"][unknown_code_record]["name"] = unknown_code_record
@@ -89,7 +93,6 @@ def generate_post_data(source_data):
 
     new_model_data["body"]["dataStores"][unknown_code_use]["rowSetName"] = rowSetName
     new_model_data["body"]["dataStores"][unknown_code_record]["rowSetName"] = rowSetName
-
 
     json.encode_to_file("./json/new_model.json", new_model_data, overwrite=True)
 
@@ -108,29 +111,29 @@ def generate_post_data(source_data):
         del model_data["body"]["dataStores"][unknown_code_record]
         del model_data["body"]["dataStores"][unknown_code_use]["rowSet"]["primary"][0]["_o"]
 
-    zh = source_record["ZH"]                    # student id
-    xm = source_record["XM"]                    # student name
-    xsxb = source_record["XSXB"]                # student sex
-    nl = source_record["NL"]                    # student age
-    szdw = source_record["SZDW"]                # student school
-    zymc = source_record["ZYMC"]                # student major
-    xslx = source_record["XSLX"]                # student type
-    zxsj = source_record["ZXSJ"]                # student phone number
-    sbsj = current_date                         # date
-    fdyxmx = source_record["FDYXMX"]            # teacher name
-    jjlxrxm = source_record["JJLXRXM"]          # parent name
-    jjlxrdh = source_record["JJLXRDH"]          # parent phone number
-    jjlxrybrgx = source_record["JJLXRYBRGX"]    # parent rel.
-    lxzt = source_record["LXZT"]                # current city
-    dqsfjjia = source_record["DQSFJJIA"]        # at home or not?
-    sheng_text = source_record["sheng_TEXT"]    # provience text
-    sheng = source_record["sheng"]              # provience
-    shi_text = source_record["shi_TEXT"]        # city text
-    shi = source_record["shi"]                  # city
+    zh = source_record["ZH"]  # student id
+    xm = source_record["XM"]  # student name
+    xsxb = source_record["XSXB"]  # student sex
+    nl = source_record["NL"]  # student age
+    szdw = source_record["SZDW"]  # student school
+    zymc = source_record["ZYMC"]  # student major
+    xslx = source_record["XSLX"]  # student type
+    zxsj = source_record["ZXSJ"]  # student phone number
+    sbsj = current_date  # date
+    fdyxmx = source_record["FDYXMX"]  # teacher name
+    jjlxrxm = source_record["JJLXRXM"]  # parent name
+    jjlxrdh = source_record["JJLXRDH"]  # parent phone number
+    jjlxrybrgx = source_record["JJLXRYBRGX"]  # parent rel.
+    lxzt = source_record["LXZT"]  # current city
+    dqsfjjia = source_record["DQSFJJIA"]  # at home or not?
+    sheng_text = source_record["sheng_TEXT"]  # provience text
+    sheng = source_record["sheng"]  # provience
+    shi_text = source_record["shi_TEXT"]  # city text
+    shi = source_record["shi"]  # city
     quxian_text = source_record["quxian_TEXT"]  # tone text
-    quxian = source_record["quxian"]            # tone
-    dqjzdz = source_record["DQJZDZ"]            # location
-    clsj = yesterday_date_time                  # temp. time
+    quxian = source_record["quxian"]  # tone
+    dqjzdz = source_record["DQJZDZ"]  # location
+    clsj = yesterday_date_time  # temp. time
 
     # SYS_USER = source_vars[0]["value"]          # student name
     # SYS_UNIT = source_vars[1]["value"]          # student unit

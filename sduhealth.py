@@ -1,14 +1,12 @@
-import requests
 import secrets
-import demjson as json
-import os
-import yaml
-
-import model
-import encrypt
-
-from bs4 import BeautifulSoup
 from tkinter import messagebox
+
+import demjson as json
+import requests
+from bs4 import BeautifulSoup
+
+import encrypt
+import model
 
 
 def js_from_file(filename):
@@ -48,7 +46,6 @@ class SduHealth(object):
         super().__init__()
         self.username = username
         self.password = password
-
 
         self.home_title = "山东大学信息化公共服务平台"
         self.serviceID = '41d9ad4a-f681-4872-a400-20a3b606d399'
@@ -107,7 +104,7 @@ class SduHealth(object):
             r = self.session.get(self.login_url)
             if r.status_code != 200:
                 self.check_login = False
-                #raise RuntimeError('Network Error!')
+                # raise RuntimeError('Network Error!')
                 return "网络错误"
 
             lt_execution = get_lt_And_execution(r)
@@ -135,7 +132,7 @@ class SduHealth(object):
             if title == self.home_title:
                 print(title)
                 print("login successful")
-                #text.insert(INSERT,"login successful")
+                # text.insert(INSERT,"login successful")
                 self.check_login = True
                 return "登录成功"
             else:
@@ -205,8 +202,8 @@ class SduHealth(object):
 
     def get_sign_data(self):
         get_sign_data_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=select&formid=" + self.form_id + "&service_id=" + \
-            self.serviceID + "&process=" + self.process_id + "&seqId=&SYS_FK=" + \
-            self.SYS_FK + "&privilegeId=" + self.privilege_id
+                            self.serviceID + "&process=" + self.process_id + "&seqId=&SYS_FK=" + \
+                            self.SYS_FK + "&privilegeId=" + self.privilege_id
 
         try:
             get_sign_data_result = self.session.get(get_sign_data_url)
@@ -257,7 +254,7 @@ class SduHealth(object):
             return "你今天已经打过卡了"
 
         checkin_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=update&formid=" + \
-            self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
+                      self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
         checkin_body = json.encode(self.frame_json)
 
         print("Start Checkin!")
@@ -270,7 +267,7 @@ class SduHealth(object):
                 if result.status_code != 200:
                     self.check_checkin = False
                     return "网络错误"
-                    #raise RuntimeError("Checkin Network Error")
+                    # raise RuntimeError("Checkin Network Error")
             except:
                 self.check_checkin = False
         else:
@@ -297,37 +294,15 @@ def read():
     studentPasswords = []
     try:
         with open('./userinfo.txt', 'r') as f:
-            user =f.readline()
+            user = f.readline()
             password = f.readline()
-            print(user,password)
-            studentIDs.append(user.strip() )
+            print(user, password)
+            studentIDs.append(user.strip())
             studentPasswords.append(password.strip())
         return studentIDs, studentPasswords
     except:
         print("获取学号以及密码出错，请检查yml文件")
         messagebox.showwarning('提示', '请先写入学工号和密码')
-    # if 'CONFIG' in os.environ:
-    #     try:
-    #         with open('./userinfo.txt','r') as f:
-    #             studentIDs.append(f.readline())
-    #             studentPasswords.append(f.readline())
-    #         # config_current = yaml.load(
-    #         #     os.environ['CONFIG'], Loader=yaml.FullLoader)
-    #         # studentIDs = config_current['jobs']['studentID']
-    #         # studentPasswords = config_current['jobs']['studentPassword']
-    #
-    #         return studentIDs, studentPasswords
-    #     except:
-    #         print("获取学号以及密码出错，请检查yml文件")
-    #         messagebox.showwarning('提示','请先写入学工号和密码')
-
-    # else:
-    #     with open("./config.yml", mode='r', encoding='utf-8') as f:
-    #         config_current = yaml.load(f, Loader=yaml.FullLoader)
-    #
-    #     studentIDs = config_current['jobs']['studentID']
-    #     studentPasswords = config_current['jobs']['studentPassword']
-    #     return studentIDs, studentPasswords
 
 
 def main():
@@ -343,7 +318,6 @@ def main():
         if sdu.check_login == False:
             print("Login Error")
             return "请检查网络或者用户名和密码是否正确"
-            #raise RuntimeError("Login Error")
 
         info = sdu.health_checkin()
         if sdu.whether_signed:
@@ -353,22 +327,15 @@ def main():
             print("Get Sign Data Error")
             sdu.health_logout()
             return "获取签名数据错误"
-            #raise RuntimeError("Get Sign Data Error")
 
         if sdu.check_checkin == False:
             print("Checkin Error")
             sdu.health_logout()
             return "Checkin错误"
-            #raise RuntimeError("Checkin Error")
 
         if not sdu.whether_signed:
             sdu.health_logout()
             return "打卡成功"
-
-
-
-        # sdu.health_logout()
-        # print("Logout Successful")
 
 
 if __name__ == "__main__":
