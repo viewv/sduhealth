@@ -106,7 +106,14 @@ pip install -r requirements.txt
 python sduhealth.py
 ```
 
-图形界面版本见 [gui 分支](https://github.com/viewv/sduhealth/tree/gui) [(GUI relases for Windows)](https://www.superzhaoyang.top/archives/16/)
+## 图形界面版本
+
+- [gui 分支](https://github.com/viewv/sduhealth/tree/gui)   
+- [(GUI relases for Windows)](https://www.superzhaoyang.top/archives/16/)
+
+## exe程序下载
+- [安装版](https://superzhaoyang.oss-cn-beijing.aliyuncs.com/software/Setup.exe)  
+- [绿色版](https://superzhaoyang.oss-cn-beijing.aliyuncs.com/software/%E5%B1%B1%E5%A4%A7%E6%89%93%E5%8D%A1.zip)  
 
 ## 程序分析
 
