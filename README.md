@@ -98,13 +98,20 @@ Value 是刚才你复制的这一串字符
 pip install -r requirements.txt
 ```
 
-安装好本程序所需依赖之后，需要把 configexample.yml 文件改名为 config.yml，然后根据文件里面的内容指示填入账号和密码。
-
-之后运行如下命令运行 sduhealth.py 便会运行程序进行打卡。
-
 ```bash
-python sduhealth.py
+python 山大打卡.py
 ```
+
+即可运行gui界面，填写用户名和密码，会自动保存，实现自动打卡。
+
+界面如下:
+
+![](https://superzhaoyang.oss-cn-beijing.aliyuncs.com/images/8IJ%60WD4U44%5B%5DG2HQXXTQV%7BX.png)
+
+本程序分为安装版和绿色版：
+
+- [安装版下载](https://superzhaoyang.oss-cn-beijing.aliyuncs.com/images/8IJ%60WD4U44%5B%5DG2HQXXTQV%7BX.png)
+- [绿色版下载](https://superzhaoyang.oss-cn-beijing.aliyuncs.com/software/%E5%B1%B1%E5%A4%A7%E6%89%93%E5%8D%A1.zip)
 
 ## 程序分析
 

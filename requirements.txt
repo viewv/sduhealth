@@ -1,5 +1,6 @@
-beautifulsoup4==4.9.1
-demjson==2.2.4
 pytz==2020.5
-PyYAML==5.3.1
-requests==2.23.0
+requests==2.22.0
+demjson==2.2.4
+beautifulsoup4==4.9.3
+PyYAML==5.4.1
+secrets==1.0.2
