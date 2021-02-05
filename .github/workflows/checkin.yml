@@ -2,7 +2,7 @@ name: checkin
 
 on:
   schedule:
-    - cron: "0 0,8 * * *"
+    - cron: "0 0,8 * * *" # scheduled at 08:00 (UTC+8) and 16:00(UTC+8) everyday
   workflow_dispatch:
   push:
     branches:
@@ -24,7 +24,6 @@ jobs:
           pip install -r requirements.txt
       
       - name: Random sleep
-        if: github.event_name == 'schedule'
         run: sleep $(shuf -i 10-30 -n 1)
       
       - name: 运行打卡脚本
