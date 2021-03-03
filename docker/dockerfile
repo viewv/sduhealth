@@ -1,24 +1,52 @@
-FROM python:slim
+FROM debian:buster-slim
 
 LABEL version="3.1.0"
 LABEL repository="https://github.com/viewv/sduhealth"
 LABEL maintainer="nekokiku <yhfpro@hotmail.com>"
 
-ENV TZ Asia/Shanghai \
-    APP_DIR=/app 
+ARG HEALTH_BASE_URL=https://github.com/viewv/sduhealth.git
+ARG HEALTH_BASE_BRANCH=main
 
-RUN apt-get update && \
-    apt-get install -y python \
+ENV LANG=zh_CN.UTF-8 \
+    HEALTH_REPO=/sduhealth
+
+RUN apk update -f \
+    && apk upgrade \
+    && apk --no-cache add -f bash \
+                             tzdata \
+                             coreutils \
+                             moreutils \
+                             git \
+                             wget \
+                             curl \
+                             nano \
+                             tzdata \
+                             perl \
+                             openssl \
+                             make \
+                             gcc \
+                             g++ \
+                             libc-dev \
+                             musl-dev \
+                             musl \
+                             autoconf \ 
+                             libtool \
+                             openssh \
+    && rm -rf /tmp/* \
+    && rm -rf /var/cache/apk/* \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apt-get update  \
+    && apt-get install -y python \
                        python-dev \
-                       python-pip && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /app \
-    && cd /app \
-    && git clone -b main https://github.com/viewv/sduhealth.git \
-    && cd sduhealth \
+                       python-pip  \
+    && apt-get clean \
+    && apt-get autoclean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && git clone -b ${HEALTH_BASE_BRANCH} ${HEALTH_BASE_URL} ${HEALTH_REPO}\
+    && cd ${HEALTH_REPO} \
     && pip install --no-cache-dir -r /requirements.txt
 
-WORKDIR ${APP_DIR}
+WORKDIR ${HEALTH_REPO}}
 
 ENTRYPOINT ["/entrypoint.sh"]
