@@ -1,5 +1,4 @@
 function Initialize {
-    Get-Location | Set-Location
     Get-Content -Path 'configexample.yml' -Encoding UTF8 | Out-String | Set-Variable 'config'
     Write-Host '[INFO] ' -ForegroundColor Cyan -NoNewline
     Write-Host '请输入需要自动打卡的信息化门户账号:'
