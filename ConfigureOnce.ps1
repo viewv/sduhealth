@@ -1,9 +1,9 @@
 function Initialize {
     Get-Content -Path 'configexample.yml' -Encoding UTF8 | Out-String | Set-Variable 'config'
-    Write-Host '[INFO] ' Cyan;
+    Write-Host '[INFO] ' -ForegroundColor Cyan -NoNewline
     Write-Host '请输入需要自动打卡的信息化门户账号:'
     Read-Host                   | Set-Variable id
-    Write-Host '[INFO] ' Cyan;
+    Write-Host '[INFO] ' -ForegroundColor Cyan -NoNewline
     Write-Host '请输入密码:'
     Read-Host -AsSecureString   | Set-Variable pass
 

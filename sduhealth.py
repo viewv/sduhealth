@@ -1,3 +1,5 @@
+from datetime import datetime
+import platform
 import requests
 import secrets
 import demjson as json
@@ -6,8 +8,10 @@ import yaml
 
 import model
 import encrypt
+import colorclass as c
 
 from bs4 import BeautifulSoup
+
 
 
 def js_from_file(filename):
@@ -105,7 +109,7 @@ class SduHealth(object):
             r = self.session.get(self.login_url)
             if r.status_code != 200:
                 self.check_login = False
-                raise RuntimeError('Network Error!')
+                error('Network Error!')
 
             lt_execution = get_lt_And_execution(r)
             lt = lt_execution['lt']
@@ -130,20 +134,18 @@ class SduHealth(object):
 
             title = get_page_title(result=result)
             if title == self.home_title:
-                print(title)
-                print("login successful")
+                info("login successful " + strong(result))
                 self.check_login = True
             else:
-                print("login failed")
+                info("login failed " + strong(result))
                 self.check_login = False
-            print("login", result)
-        except:
+        except Exception as e:
             self.check_login = False
-            print('login error')
+            error(e)
 
     def getHealthUrl(self):
         getHealth = self.session.get(self.health_url)
-        print(getHealth)
+        print(strong(getHealth))
 
     def check_service(self):
         try:
@@ -152,9 +154,9 @@ class SduHealth(object):
             }
             check_result = self.session.post(
                 self.check_service_url, json=check_body, headers=self.service_header)
-            print(check_result)
+            print(strong(check_result))
         except:
-            print("check_service error")
+            error("check_service error")
 
     def serve_info(self):
         try:
@@ -163,9 +165,9 @@ class SduHealth(object):
             }
             serve_result = self.session.post(
                 self.serve_info_url, json=serve_body, headers=self.service_header)
-            print(serve_result)
-        except:
-            pass
+            print(strong(serve_result))
+        except Exception as e:
+            error(e)
 
     def get_serve_apply(self):
         get_serve_apply_body = {
@@ -175,13 +177,13 @@ class SduHealth(object):
         try:
             get_serve_apply_result = self.session.post(
                 self.get_serve_apply_url, json=get_serve_apply_body, headers=self.service_header)
-            print(get_serve_apply_result)
+            print(strong(get_serve_apply_result))
             get_serve_apply_json = get_serve_apply_result.json()
             self.form_id = get_serve_apply_json['formID']
             self.process_id = get_serve_apply_json['procID']
             self.privilege_id = get_serve_apply_json['privilegeId']
         except:
-            print("get_serve_apply error")
+            error("get_serve_apply error")
 
     def get_continue_service(self):
         get_continue_service_body = {
@@ -190,11 +192,11 @@ class SduHealth(object):
         try:
             get_continue_service_result = self.session.post(
                 self.get_continue_service_url, json=get_continue_service_body, headers=self.service_header)
-            print(get_continue_service_result)
+            print(strong(get_continue_service_result))
             get_continue_service_json = get_continue_service_result.json()
             self.SYS_FK = get_continue_service_json[0]['proc_inst_id']
         except:
-            print("get_continue_service error")
+            warning("get_continue_service error")
 
     def get_sign_data(self):
         get_sign_data_url = "https://scenter.sdu.edu.cn/tp_fp/formParser?status=select&formid=" + self.form_id + "&service_id=" + \
@@ -203,7 +205,7 @@ class SduHealth(object):
 
         try:
             get_sign_data_result = self.session.get(get_sign_data_url)
-            print(get_sign_data_result)
+            print(strong(get_sign_data_result))
 
             if get_sign_data_result.status_code != 200:
                 self.check_getSignData = False
@@ -219,25 +221,25 @@ class SduHealth(object):
             self.frame_json = frame_json
         except:
             self.check_getSignData = False
-            print("get_sign_data error")
+            info("get_sign_data error")
 
     def health_checkin(self):
-        print("gethealth ", end='')
+        info("gethealth ", end='')
         self.getHealthUrl()
 
-        print("checkService ", end='')
+        info("checkService ", end='')
         self.check_service()
 
-        print("serveInfo ", end='')
+        info("serveInfo ", end='')
         self.serve_info()
 
-        print("getServeApply ", end='')
+        info("getServeApply ", end='')
         self.get_serve_apply()
 
-        print("getContinueService ", end='')
+        info("getContinueService ", end='')
         self.get_continue_service()
 
-        print("getSignData ", end='')
+        info("getSignData ", end='')
         self.get_sign_data()
 
         if self.whether_signed:
@@ -248,33 +250,36 @@ class SduHealth(object):
             self.form_id + "&workflowAction=startProcess&seqId=&workitemid=&process=" + self.process_id
         checkin_body = json.encode(self.frame_json)
 
-        print("Start Checkin!")
+        info("Start Checkin!")
         if self.check_getSignData == True:
             try:
+                info("Checkin ", end='')
                 result = self.session.post(checkin_url, data=checkin_body,
                                            headers=self.checkin_header)
-                print("Checkin", result)
+                print(strong(result))
 
                 if result.status_code != 200:
                     self.check_checkin = False
                     raise RuntimeError("Checkin Network Error")
-            except:
+            except Exception as e:
                 self.check_checkin = False
+                error(e)
         else:
-            print("Network Error!")
+            error("Network Error!")
 
     def health_logout(self):
         try:
-            result = self.session.get(self.logout_1_url)
-            print("logout 1", result)
-            result = self.session.get(self.logout_2_url)
-            print("logout 2", result)
-            result = self.session.get(self.logout_3_url)
-            print("logout 3", result)
-            result = self.session.get(self.logout_4_url)
-            print("logout 4", result)
-        except:
-            print("logout ?")
+            info("logout (1/4): ", end='')
+            print(strong('done' if self.session.get(self.logout_1_url).status_code == 200 else 'error'))
+            info("logout (2/4): ", end='')
+            print(strong('done' if self.session.get(self.logout_2_url).status_code == 200 else 'error'))
+            info("logout (3/4): ", end='')
+            print(strong('done' if self.session.get(self.logout_3_url).status_code == 200 else 'error'))
+            info("logout (4/4): ", end='')
+            print(strong('done' if self.session.get(self.logout_4_url).status_code == 200 else 'error'))
+        except Exception as e:
+            warning("logout ?")
+            error(e)
         self.session.close()
 
 
@@ -288,8 +293,9 @@ def read():
             studentIDs = config_current['jobs']['studentID']
             studentPasswords = config_current['jobs']['studentPassword']
             return studentIDs, studentPasswords
-        except:
-            print("获取学号以及密码出错，请检查yml文件")
+        except Exception as e:
+            warning("Error in reading config.yml from ENV:\033[94m$CONFIG\033[0m, please check.")
+            error(e)
     else:
         with open("./config.yml", mode='r', encoding='utf-8') as f:
             config_current = yaml.load(f, Loader=yaml.FullLoader)
@@ -298,36 +304,76 @@ def read():
         studentPasswords = config_current['jobs']['studentPassword']
         return studentIDs, studentPasswords
 
+def _timestamp():
+    print("[{}]".format(datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")), end=' ')
+
+def error(cause):
+    _timestamp()
+    print("\033[91m[ERROR]\033[0m Program exited due to:", cause)
+    exit()
+
+
+def info(log, end=None):
+    _timestamp()
+    print("\033[96m[INFO]\033[0m", log, end=end)
+    return
+
+
+def warning(warning):
+    _timestamp()
+    print("\033[93m[WARN]\033[0m", warning)
+    return
+
+
+def strong(string):
+    return "\033[42;97m " + str(string) + " \033[0m"
+
 
 def main():
+    slogan = r"""
+    _____ ____  __  __   __  __           ____  __   
+   / ___// __ \/ / / /  / / / /__  ____ _/ / /_/ /_  
+   \__ \/ / / / / / /  / /_/ / _ \/ __ `/ / __/ __ \ 
+  ___/ / /_/ / /_/ /  / __  /  __/ /_/ / / /_/ / / / 
+ /____/_____/\____/  /_/ /_/\___/\__,_/_/\__/_/ /_/  
+                                                     
+"""
+    lines = slogan.splitlines()
+    width = os.get_terminal_size().columns - max(lines, key=len).__len__()
+    left = width // 2
+    for line in lines:
+        print(' ' * left + "\033[107;1;41m" + line + "\033[0m")
+
     users, passwords = read()
     for i in range(0, len(users)):
-        print("Sign in for", users[i][-3:])
+        info("Sign in for " + users[i] + (", count: " + i if i > 0 else ""))
 
         user = users[i]
         password = passwords[i]
         sdu = SduHealth(username=user, password=password)
 
+        info("-------------------")
+
         sdu.health_login()
         if sdu.check_login == False:
-            print("Login Error")
-            raise RuntimeError("Login Error")
+            error("Login Error")
 
         sdu.health_checkin()
         if sdu.check_getSignData == False:
-            print("Get Sign Data Error")
-            raise RuntimeError("Get Sign Data Error")
+            error("Get Sign Data Error")
 
         if sdu.check_checkin == False:
-            print("Checkin Error")
-            raise RuntimeError("Checkin Error")
+            error("Checkin Error")
 
         if not sdu.whether_signed:
-            print("Checkin Successful")
+            info("Checkin Successful")
 
         sdu.health_logout()
-        print("Logout Successful")
+        info("Logout Successful")
+        info("-------------------")
 
 
 if __name__ == "__main__":
+    if(platform.system() == "Windows"):
+        c.Windows.enable()
     main()
