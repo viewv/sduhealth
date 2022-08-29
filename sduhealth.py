@@ -330,20 +330,6 @@ def strong(string):
 
 
 def main():
-    slogan = r"""
-    _____ ____  __  __   __  __           ____  __   
-   / ___// __ \/ / / /  / / / /__  ____ _/ / /_/ /_  
-   \__ \/ / / / / / /  / /_/ / _ \/ __ `/ / __/ __ \ 
-  ___/ / /_/ / /_/ /  / __  /  __/ /_/ / / /_/ / / / 
- /____/_____/\____/  /_/ /_/\___/\__,_/_/\__/_/ /_/  
-                                                     
-"""
-    lines = slogan.splitlines()
-    width = os.get_terminal_size().columns - max(lines, key=len).__len__()
-    left = width // 2
-    for line in lines:
-        print(' ' * left + "\033[107;1;41m" + line + "\033[0m")
-
     users, passwords = read()
     for i in range(0, len(users)):
         info("Sign in for " + users[i] + (", count: " + i if i > 0 else ""))
