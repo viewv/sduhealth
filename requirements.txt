@@ -2,5 +2,5 @@ beautifulsoup4==4.9.1
 demjson==2.2.4
 pytz==2020.5
 PyYAML==5.4
-requests==2.23.0
+requests==2.31.0
 colorclass==2.2.0
